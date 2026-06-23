@@ -1,327 +1,543 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="no">
 <head>
-  <meta charset="utf-8" />
-  <title>Honorarberegning</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-  <!-- Chart.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Periodontitt-klassifisering · AAP/EFP 2017</title>
+<style>
+:root{
+  --bg:#F4F7F5;
+  --surface:#FFFFFF;
+  --surface-2:#FAFCFB;
+  --ink:#16201C;
+  --ink-soft:#3D4843;
+  --muted:#6E776F;
+  --line:#E4EAE6;
+  --line-strong:#CBD4CE;
+  --accent:#1E6E5B;
+  --accent-soft:#E6F0EC;
+  --accent-ink:#124A3D;
+  --sev1:#3E8E6A; --sev2:#7E9A3C; --sev3:#C2871F; --sev4:#B0512C;
+  --sev1-bg:#E8F2EC; --sev2-bg:#F1F3E2; --sev3-bg:#F8EFD9; --sev4-bg:#F7E7DE;
+  --radius:14px; --radius-sm:9px;
+  --font-ui:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-display:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --font-mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;}
 
-  <style>
-    /* ... (samme CSS som før) ... */
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #f5f5f5;
-    }
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .input-section {
-      background-color: #f8f9fa;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-    }
-    .input-group {
-      margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-    }
-    .input-group label {
-      flex: 0 0 200px;
-      margin-right: 10px;
-    }
-    .input-group input {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      width: 150px;
-    }
-    .results {
-      margin: 20px 0;
-      padding: 20px;
-      background: #e9f5ff;
-      border-radius: 4px;
-    }
-    .sum-line {
-      border-top: 2px solid #2563eb;
-      margin: 10px 0;
-      padding-top: 10px;
-      font-weight: bold;
-    }
-    .grunnlag-text {
-      font-weight: bold;
-      color: #2563eb;
-    }
-    .final-result {
-      font-size: 18px;
-      color: #2563eb;
-      font-weight: bold;
-      margin: 10px 0;
-    }
-    .chart-container {
-      margin: 20px 0;
-      height: 300px;
-      background: white;
-      padding: 10px;
-      border-radius: 4px;
-    }
-  </style>
+/* ---------- Header ---------- */
+header.top{border-bottom:1px solid var(--line);background:var(--surface);}
+.top-inner{max-width:1080px;margin:0 auto;padding:22px 24px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px;}
+.brand h1{font-family:var(--font-display);font-size:25px;font-weight:600;margin:0;letter-spacing:.01em;}
+.brand .src{font-size:12.5px;color:var(--muted);margin-top:3px;letter-spacing:.02em;}
+.meta{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap;}
+.meta .field{min-width:148px;}
+
+/* ---------- Layout ---------- */
+.wrap{max-width:1080px;margin:0 auto;padding:24px;}
+.app{display:grid;grid-template-columns:1fr 372px;gap:24px;align-items:start;}
+@media (max-width:880px){ .app{grid-template-columns:1fr;} }
+
+/* ---------- Cards ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 22px;}
+.card + .card{margin-top:16px;}
+.shead{display:flex;align-items:baseline;gap:12px;margin:0;}
+.shead .n{font-family:var(--font-display);font-size:26px;color:var(--accent);font-weight:600;line-height:1;}
+.shead h2{font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);margin:0;font-weight:700;}
+.sub{color:var(--muted);font-size:13px;margin:6px 0 14px;}
+
+.grp{margin-top:18px;}
+.grp .lbl{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:9px;}
+
+/* ---------- Segmented radios ---------- */
+.seg{display:flex;flex-wrap:wrap;gap:6px;}
+.seg label{position:relative;cursor:pointer;}
+.seg input{position:absolute;opacity:0;width:0;height:0;}
+.seg span{display:inline-block;padding:8px 13px;border:1px solid var(--line-strong);border-radius:999px;font-size:13px;color:var(--ink-soft);background:var(--surface);transition:background .12s,border-color .12s,color .12s;line-height:1.2;}
+.seg label:hover span{border-color:var(--accent);}
+.seg input:checked + span{background:var(--accent);border-color:var(--accent);color:#fff;}
+.seg input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px;}
+
+/* ---------- Number/text fields ---------- */
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:12.5px;font-weight:600;color:var(--ink-soft);}
+.field input{padding:9px 11px;border:1px solid var(--line-strong);border-radius:var(--radius-sm);font:inherit;font-size:14px;color:var(--ink);background:var(--surface);width:100%;}
+input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* ---------- Checkboxes ---------- */
+.checks{display:grid;gap:8px;}
+.check{display:flex;gap:11px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-sm);cursor:pointer;background:var(--surface);transition:border-color .12s,background .12s;}
+.check:hover{border-color:var(--line-strong);background:var(--surface-2);}
+.check input{margin:1px 0 0;width:17px;height:17px;accent-color:var(--accent);flex:none;}
+.check .txt{font-size:13.5px;color:var(--ink-soft);}
+.check .txt small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px;}
+.tag{font-family:var(--font-mono);font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:6px;margin-left:auto;flex:none;letter-spacing:.02em;}
+.tag.t3{background:var(--sev3-bg);color:#8a5e10;}
+.tag.t4{background:var(--sev4-bg);color:#8a3a1c;}
+
+/* ---------- Result panel ---------- */
+.result{position:sticky;top:18px;}
+.result .shead .n{color:var(--accent);}
+.diag-pills{display:flex;gap:10px;margin-top:14px;}
+.pill{flex:1 1 0;min-width:0;border-radius:12px;padding:13px 14px;border:1px solid var(--line);background:var(--surface-2);transition:background .15s,border-color .15s;}
+.pill .k{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+.pill .v{font-family:var(--font-display);font-size:33px;font-weight:600;line-height:1.05;color:var(--ink);margin-top:3px;}
+.pill .vsub{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.pill[data-sev="1"]{background:var(--sev1-bg);border-color:#cfe5d8;} .pill[data-sev="1"] .v{color:var(--sev1);}
+.pill[data-sev="2"]{background:var(--sev2-bg);border-color:#dde2c0;} .pill[data-sev="2"] .v{color:var(--sev2);}
+.pill[data-sev="3"]{background:var(--sev3-bg);border-color:#ecd9ad;} .pill[data-sev="3"] .v{color:var(--sev3);}
+.pill[data-sev="4"]{background:var(--sev4-bg);border-color:#ecccba;} .pill[data-sev="4"] .v{color:var(--sev4);}
+.pill[data-grade="A"]{background:var(--sev1-bg);border-color:#cfe5d8;} .pill[data-grade="A"] .v{color:var(--sev1);}
+.pill[data-grade="B"]{background:var(--sev3-bg);border-color:#ecd9ad;} .pill[data-grade="B"] .v{color:var(--sev3);}
+.pill[data-grade="C"]{background:var(--sev4-bg);border-color:#ecccba;} .pill[data-grade="C"] .v{color:var(--sev4);}
+
+.dx{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);}
+.dx .dxk{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+.dx .dxv{font-family:var(--font-display);font-size:19px;line-height:1.3;color:var(--ink);margin-top:4px;}
+.dx .dxhint{font-size:13px;color:var(--muted);}
+.ratiobox{margin-top:14px;display:flex;align-items:center;gap:10px;background:var(--accent-soft);border:1px solid #cfe5db;border-radius:10px;padding:10px 13px;}
+.ratiobox .rk{font-size:12px;color:var(--accent-ink);font-weight:600;}
+.ratiobox .rv{font-family:var(--font-mono);font-size:18px;font-weight:600;color:var(--accent-ink);margin-left:auto;}
+
+.why{margin-top:16px;}
+.why h3{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-ink);margin:0 0 8px;font-weight:700;}
+.why ul{margin:0 0 14px;padding-left:18px;}
+.why ul:last-child{margin-bottom:0;}
+.why li{font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;line-height:1.45;}
+.why li.warn{color:#8a3a1c;}
+
+.note{font-size:11.5px;color:var(--muted);margin-top:16px;line-height:1.45;border-top:1px solid var(--line);padding-top:12px;}
+
+/* ---------- Toolbar ---------- */
+.toolbar{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;}
+button.btn{font:inherit;font-weight:600;font-size:14px;padding:11px 18px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:filter .12s;}
+button.btn.secondary{background:var(--surface);color:var(--accent-ink);border-color:var(--line-strong);}
+button.btn:hover{filter:brightness(1.06);}
+button.btn:focus-visible{outline:2px solid var(--accent-ink);outline-offset:2px;}
+
+/* ---------- Report (print only) ---------- */
+#report{display:none;}
+@media print{
+  header.top,.wrap{display:none !important;}
+  #report{display:block;}
+  @page{margin:18mm;}
+  body{background:#fff;}
+}
+#report{font-family:var(--font-ui);color:#16201c;}
+.rep-head{border-bottom:2px solid var(--accent);padding-bottom:10px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:flex-end;}
+.rep-head h1{font-family:var(--font-display);font-size:22px;margin:0;}
+.rep-head .src{font-size:12px;color:var(--muted);margin-top:3px;}
+.rep-meta{font-size:12.5px;text-align:right;color:var(--ink-soft);line-height:1.6;}
+.rep-dx{font-family:var(--font-display);font-size:21px;margin:0 0 4px;}
+.rep-dxlabel{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+.rep-section{margin-top:20px;}
+.rep-section h2{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-ink);border-bottom:1px solid var(--line);padding-bottom:5px;margin:0 0 10px;}
+.rep-section ul{margin:0;padding-left:18px;}
+.rep-section li{font-size:13px;margin-bottom:5px;line-height:1.45;}
+table.rep-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+table.rep-tbl td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top;}
+table.rep-tbl td.lab{color:var(--muted);width:42%;}
+.rep-sign{margin-top:34px;display:flex;gap:40px;}
+.rep-sign .line{flex:1;border-top:1px solid #16201c;padding-top:5px;font-size:11.5px;color:var(--muted);}
+.rep-foot{margin-top:24px;font-size:10.5px;color:var(--muted);line-height:1.5;border-top:1px solid var(--line);padding-top:10px;}
+
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Honorarberegning</h1>
 
-    <!-- Omsetning -->
-    <div class="input-section">
-      <h3>Omsetning denne perioden</h3>
-      <div class="input-group">
-        <label for="omsetning">Total omsetning (NOK):</label>
-        <input type="number" id="omsetning" value="0" step="1" />
-      </div>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <h1>Periodontitt-klassifisering</h1>
+      <div class="src">Stadium &amp; Grad · AAP/EFP 2017</div>
     </div>
-
-    <!-- Innbetalinger -->
-    <div class="input-section">
-      <h3>Innbetalinger</h3>
-      <div class="input-group">
-        <label for="kontant">Kontantbetaling (NOK):</label>
-        <input type="number" id="kontant" value="0" step="1" />
-      </div>
-      <div class="input-group">
-        <label for="bankkort">Bankkort (NOK):</label>
-        <input type="number" id="bankkort" value="0" step="1" />
-      </div>
-      <div class="input-group">
-        <label for="bankinn">Bankinnbetalinger (NOK):</label>
-        <input type="number" id="bankinn" value="0" step="1" />
-      </div>
-    </div>
-
-    <!-- Fratrekk -->
-    <div class="input-section">
-      <h3>Fratrekk</h3>
-      <div class="input-group">
-        <label for="teknikerhonorar">Fratrekk tannteknikerhonorar (NOK):</label>
-        <input type="number" id="teknikerhonorar" value="0" step="1" />
-      </div>
-      <div class="input-group">
-        <label for="salg">Fratrekk salg (NOK):</label>
-        <input type="number" id="salg" value="0" step="1" />
-      </div>
-    </div>
-
-    <!-- Beregning -->
-    <div class="results">
-      <h3>Beregning</h3>
-      <div id="calculationText"></div>
-    </div>
-
-    <!-- Diagram -->
-    <div class="chart-container">
-      <canvas id="resultatChart"></canvas>
+    <div class="meta">
+      <div class="field"><label for="repdate">Dato</label><input type="date" id="repdate"></div>
+      <div class="field"><label for="repref">Referanse</label><input type="text" id="repref" placeholder="Ikke personidentifiserbart" autocomplete="off"></div>
     </div>
   </div>
+</header>
 
-  <script>
-    // Wait for plugin to load
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof Chart !== 'undefined') {
-        try {
-          Chart.register(window.ChartDataLabels);
-          console.log('ChartDataLabels plugin registered successfully');
-        } catch (e) {
-          console.error('Error registering ChartDataLabels plugin:', e);
-        }
-      } else {
-        console.error('Chart.js is not loaded');
-      }
-    });
+<div class="wrap">
+<div class="app">
 
-    function initCalculator() {
-      // Cache DOM elements
-      const omsetningInput = document.getElementById("omsetning");
-      const kontantInput = document.getElementById("kontant");
-      const bankkortInput = document.getElementById("bankkort");
-      const bankinnInput = document.getElementById("bankinn");
-      const teknikerInput = document.getElementById("teknikerhonorar");
-      const salgInput = document.getElementById("salg");
-      const calculationText = document.getElementById("calculationText");
-      const chartCanvas = document.getElementById("resultatChart");
+  <!-- ============ INPUTS ============ -->
+  <div class="inputs">
 
-      let myChart = null;
+    <!-- 1. STAGING -->
+    <section class="card">
+      <div class="shead"><span class="n">1</span><h2>Stadium</h2></div>
+      <p class="sub">Alvorlighetsgrad bestemmer utgangspunktet. Tanntap og kompleksitet kan heve stadiet.</p>
 
-      // Helper function to parse input values safely
-      function getNumberValue(elem) {
-        const val = parseFloat(elem.value);
-        return isNaN(val) ? 0 : val;
-      }
+      <div class="grp">
+        <div class="lbl">Alvorlighetsgrad</div>
+        <div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;">Interdentalt klinisk festetap (CAL) på stedet med størst tap — primært mål for stadium</div>
+        <div class="seg" role="radiogroup" aria-label="CAL">
+          <label><input type="radio" name="cal" value="1"><span>1–2 mm</span></label>
+          <label><input type="radio" name="cal" value="2"><span>3–4 mm</span></label>
+          <label><input type="radio" name="cal" value="3"><span>≥ 5 mm</span></label>
+        </div>
+        <div class="field" style="margin-top:14px;max-width:260px;">
+          <label for="rblpct">Radiografisk beintap (% av rotlengde, verste sted)</label>
+          <input type="number" id="rblpct" min="0" max="100" step="1" inputmode="numeric">
+          <div id="rblHint" style="font-size:11.5px;color:var(--muted);min-height:15px;"></div>
+        </div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45;">Stadium settes av CAL. Mangler CAL, brukes beintapsprosenten i stedet. Prosenten brukes uansett til å beregne grad (beintap/alder).</div>
+      </div>
 
-      // Helper for currency formatting
-      function formatNOK(value) {
-        return new Intl.NumberFormat("nb-NO", {
-          style: "currency",
-          currency: "NOK",
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        }).format(value);
-      }
+      <div class="grp">
+        <div class="lbl">Tanntap pga. periodontitt</div>
+        <div class="seg" role="radiogroup" aria-label="Tanntap">
+          <label><input type="radio" name="toothloss" value="0"><span>Ingen</span></label>
+          <label><input type="radio" name="toothloss" value="1-4"><span>1–4 tenner</span></label>
+          <label><input type="radio" name="toothloss" value="5+"><span>≥ 5 tenner</span></label>
+        </div>
+      </div>
 
-      // Main update function
-      function updateCalculator() {
-        try {
-          const omsetning = getNumberValue(omsetningInput);
-          const kontant = getNumberValue(kontantInput);
-          const bankkort = getNumberValue(bankkortInput);
-          const bankinn = getNumberValue(bankinnInput);
-          const teknikerhonorar = getNumberValue(teknikerInput);
-          const salg = getNumberValue(salgInput);
+      <div class="grp">
+        <div class="lbl">Kompleksitet</div>
+        <div class="field" style="margin-bottom:10px;">
+          <label for="maxpd">Maks lommedybde (mm)</label>
+          <input type="number" id="maxpd" min="0" max="20" step="1" inputmode="numeric" style="max-width:140px;">
+        </div>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="vertical"><span class="txt">Vertikal bendefekt ≥ 3 mm</span><span class="tag t3">→ III</span></label>
+          <label class="check"><input type="checkbox" id="furcation"><span class="txt">Furkasjonsinvolvering grad II/III</span><span class="tag t3">→ III</span></label>
+          <label class="check"><input type="checkbox" id="mobility"><span class="txt">Tannmobilitet grad ≥ 2<small>sekundært okklusalt traume</small></span><span class="tag t4">→ IV</span></label>
+          <label class="check"><input type="checkbox" id="masticatory"><span class="txt">Tyggefunksjonssvikt / bittkollaps<small>drifting, flaring</small></span><span class="tag t4">→ IV</span></label>
+          <label class="check"><input type="checkbox" id="under20"><span class="txt">&lt; 20 gjenværende tenner<small>færre enn 10 motstående par</small></span><span class="tag t4">→ IV</span></label>
+          <label class="check"><input type="checkbox" id="rehab"><span class="txt">Behov for kompleks rehabilitering</span><span class="tag t4">→ IV</span></label>
+        </div>
+      </div>
 
-          // Calculate sums
-          const sumInnbetalinger = kontant + bankkort + bankinn;
-          const sumFratrekk = teknikerhonorar + salg;
-          const grunnlag = sumInnbetalinger - sumFratrekk;
-          const omsetningEtterTeknikker = omsetning - teknikerhonorar;
-          const differanseInnbetalinger = sumInnbetalinger - omsetning;
-          const omsetningsandel = grunnlag * 0.4; // Tannlegeandel (40%)
-          const klinikkandel = grunnlag * 0.6;    // Klinikkandel (60%)
+      <div class="grp">
+        <div class="lbl">Utbredelse</div>
+        <div class="seg" role="radiogroup" aria-label="Utbredelse">
+          <label><input type="radio" name="extent" value="localized"><span>Lokalisert &lt;30 %</span></label>
+          <label><input type="radio" name="extent" value="generalized"><span>Generalisert ≥30 %</span></label>
+          <label><input type="radio" name="extent" value="molarincisor"><span>Molar-incisiv</span></label>
+        </div>
+      </div>
+    </section>
 
-          // Update text results
-          calculationText.innerHTML = `
-            <p>Total omsetning: ${formatNOK(omsetning)}</p>
-            <p>Sum innbetalinger: ${formatNOK(sumInnbetalinger)}</p>
-            <p>Sum fratrekk: ${formatNOK(sumFratrekk)}</p>
-            <div class="sum-line">
-              <span class="grunnlag-text">
-                Netto inntekt, grunnlag for leieberegning: ${formatNOK(grunnlag)}
-              </span>
-            </div>
-            <p class="final-result">
-              40% omsetningsandel: ${formatNOK(omsetningsandel)}
-            </p>
-            <p>Differanse mellom innbetalinger og omsetning: ${formatNOK(differanseInnbetalinger)}</p>
-          `;
+    <!-- 2. GRADING -->
+    <section class="card">
+      <div class="shead"><span class="n">2</span><h2>Grad</h2></div>
+      <p class="sub">Primærkriteriet er beintap delt på alder. Røyking og diabetes kan heve graden.</p>
 
-          // Destroy old chart before creating a new one
-          if (myChart) {
-            myChart.destroy();
-          }
+      <div class="grp">
+        <div class="lbl">Primærkriterium — beintap / alder</div>
+        <div class="row2">
+          <div class="field"><label for="age">Alder (år)</label><input type="number" id="age" min="1" max="120" step="1" inputmode="numeric"></div>
+          <div class="field"><label>Radiografisk beintap</label><div id="rblEcho" style="padding:9px 11px;border:1px dashed var(--line-strong);border-radius:var(--radius-sm);font-size:14px;color:var(--muted);background:var(--surface-2);">— fylles inn under «Stadium»</div></div>
+        </div>
+      </div>
 
-          myChart = new Chart(chartCanvas.getContext("2d"), {
-            type: "bar",
-            data: {
-              labels: [
-                "Total omsetning",
-                "Innbetalinger",
-                "Fratrekk",
-                "Grunnlag",
-                "Tannlegehonorar (40%)",
-                "Klinikkandel (60%)",
-                "Differanse innb/oms"
-              ],
-              datasets: [
-                {
-                  data: [
-                    omsetning,
-                    sumInnbetalinger,
-                    sumFratrekk,
-                    grunnlag,
-                    omsetningsandel,
-                    klinikkandel,
-                    differanseInnbetalinger
-                  ],
-                  backgroundColor: [
-                    "rgba(75, 192, 192, 0.5)",  // Turkis
-                    "rgba(54, 162, 235, 0.5)",  // Blå
-                    "rgba(153, 102, 255, 0.5)", // Lilla
-                    "rgba(255, 99, 132, 0.5)",  // Rød
-                    "rgba(255, 159, 64, 0.5)",  // Oransje
-                    "rgba(255, 205, 86, 0.5)",  // Gul
-                    "rgba(201, 203, 207, 0.5)", // Grå
-                    "rgba(138, 43, 226, 0.5)"   // Lilla
-                  ],
-                  borderColor: [
-                    "rgba(75, 192, 192, 1)",
-                    "rgba(54, 162, 235, 1)",
-                    "rgba(153, 102, 255, 1)",
-                    "rgba(255, 99, 132, 1)",
-                    "rgba(255, 159, 64, 1)",
-                    "rgba(255, 205, 86, 1)",
-                    "rgba(201, 203, 207, 1)",
-                    "rgba(138, 43, 226, 1)"
-                  ],
-                  borderWidth: 1
-                }
-              ]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  display: false
-                },
-                datalabels: {
-                  display: true,
-                  anchor: 'end',
-                  align: 'end',
-                  formatter: function(value) {
-                    return formatNOK(value);
-                  },
-                  font: {
-                    weight: 'bold',
-                    size: 11
-                  },
-                  color: '#333',
-                  offset: 4,
-                  padding: 4
-                }
-              },
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  ticks: {
-                    callback: (value) => formatNOK(value)
-                  }
-                }
-              }
-            }
-          });
-        } catch (error) {
-          console.error("Error in updateCalculator:", error);
-        }
-      }
+      <div class="grp">
+        <div class="lbl">Fenotype (destruksjon vs. biofilm)</div>
+        <div class="seg" role="radiogroup" aria-label="Fenotype">
+          <label><input type="radio" name="phenotype" value="A"><span>A · biofilm ≫ destruksjon</span></label>
+          <label><input type="radio" name="phenotype" value="B"><span>B · i samsvar</span></label>
+          <label><input type="radio" name="phenotype" value="C"><span>C · destruksjon ≫ biofilm</span></label>
+        </div>
+      </div>
 
-      // Add listeners to inputs
-      [
-        omsetningInput,
-        kontantInput,
-        bankkortInput,
-        bankinnInput,
-        teknikerInput,
-        salgInput
-      ].forEach((inputElem) => {
-        inputElem.addEventListener("input", updateCalculator);
-      });
+      <div class="grp">
+        <div class="lbl">Risikofaktor — røyking</div>
+        <div class="seg" role="radiogroup" aria-label="Røyking">
+          <label><input type="radio" name="smoking" value="non"><span>Ikke-røyker</span></label>
+          <label><input type="radio" name="smoking" value="lt10"><span>&lt; 10 sig/dag</span></label>
+          <label><input type="radio" name="smoking" value="ge10"><span>≥ 10 sig/dag</span></label>
+        </div>
+      </div>
 
-      // Initialize
-      updateCalculator();
+      <div class="grp">
+        <div class="lbl">Risikofaktor — diabetes</div>
+        <div class="seg" role="radiogroup" aria-label="Diabetes">
+          <label><input type="radio" name="diabetes" value="none"><span>Ingen</span></label>
+          <label><input type="radio" name="diabetes" value="lt7"><span>HbA1c &lt; 7 %</span></label>
+          <label><input type="radio" name="diabetes" value="ge7"><span>HbA1c ≥ 7 %</span></label>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ RESULT ============ -->
+  <aside class="result">
+    <section class="card">
+      <div class="shead"><span class="n">∑</span><h2>Resultat</h2></div>
+
+      <div class="diag-pills">
+        <div class="pill" id="stagePill"><div class="k">Stadium</div><div class="v" id="stageVal">—</div><div class="vsub" id="stageSub"></div></div>
+        <div class="pill" id="gradePill"><div class="k">Grad</div><div class="v" id="gradeVal">—</div><div class="vsub" id="gradeSub"></div></div>
+      </div>
+
+      <div class="dx">
+        <div class="dxk">Diagnose</div>
+        <div class="dxv" id="dxText"><span class="dxhint">Angi CAL eller beintap (%) for å starte.</span></div>
+      </div>
+
+      <div class="ratiobox" id="ratioBox" style="display:none;">
+        <span class="rk">Beintap / alder</span>
+        <span class="rv" id="ratioVal">–</span>
+      </div>
+
+      <div class="why">
+        <h3>Begrunnelse — stadium</h3>
+        <ul id="stageWhy"><li>Venter på funn.</li></ul>
+        <h3>Begrunnelse — grad</h3>
+        <ul id="gradeWhy"><li>Venter på funn.</li></ul>
+      </div>
+
+      <div class="toolbar">
+        <button class="btn secondary" id="resetBtn" type="button">Nullstill</button>
+        <button class="btn" id="printBtn" type="button">Skriv ut rapport</button>
+      </div>
+
+      <p class="note">Beslutningsstøtte basert på AAP/EFP 2017-klassifiseringen. Verktøyet erstatter ikke klinisk skjønn — endelig diagnose settes av behandler. Skriv aldri inn personidentifiserbare opplysninger i referansefeltet.</p>
+    </section>
+  </aside>
+
+</div>
+</div>
+
+<!-- ============ PRINT REPORT ============ -->
+<div id="report"></div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const gv=name=>{const el=document.querySelector('input[name="'+name+'"]:checked');return el?el.value:null;};
+const num=id=>{const v=parseFloat($(id).value);return isNaN(v)?null:v;};
+const chk=id=>$(id).checked;
+const gradeRank={A:1,B:2,C:3};
+const rankGrade={1:'A',2:'B',3:'C'};
+const stageRoman={1:'I',2:'II',3:'III',4:'IV'};
+const stageName={1:'Mild',2:'Moderat',3:'Alvorlig',4:'Svært alvorlig'};
+const gradeName={A:'Lav risiko',B:'Moderat risiko',C:'Høy risiko'};
+
+const L={
+  cal:{'1':'1–2 mm','2':'3–4 mm','3':'≥ 5 mm'},
+  toothloss:{'0':'Ingen','1-4':'1–4 tenner','5+':'≥ 5 tenner'},
+  extent:{localized:'Lokalisert (<30 %)',generalized:'Generalisert (≥30 %)',molarincisor:'Molar-incisiv-mønster'},
+  phenotype:{A:'Grad A – kraftig biofilm, lite destruksjon',B:'Grad B – destruksjon i samsvar med biofilm',C:'Grad C – destruksjon overstiger biofilmnivå / rask progresjon'},
+  smoking:{non:'Ikke-røyker',lt10:'< 10 sigaretter/dag',ge10:'≥ 10 sigaretter/dag'},
+  diabetes:{none:'Ingen / normoglykemi',lt7:'HbA1c < 7 %',ge7:'HbA1c ≥ 7 %'}
+};
+const lab=name=>{const v=gv(name);return v?L[name][v]:'Ikke angitt';};
+
+function computeStage(){
+  const cal=gv('cal'), tl=gv('toothloss');
+  const rblpct=num('rblpct');
+  const maxpd=num('maxpd');
+  const vertical=chk('vertical'), furcation=chk('furcation');
+  const mobility=chk('mobility'), masticatory=chk('masticatory'), under20=chk('under20'), rehab=chk('rehab');
+  let reasons=[], base=null;
+
+  if(cal){
+    base=parseInt(cal,10);
+    reasons.push({t:'Interdentalt CAL '+L.cal[cal]+' → utgangspunkt Stadium '+stageRoman[base]+'.'});
+  } else if(rblpct!==null){
+    let third;
+    if(rblpct<15){ base=1; third='coronale tredjedel (<15 %)'; }
+    else if(rblpct<=33){ base=2; third='coronale tredjedel (15–33 %)'; }
+    else { base=3; third='midtre tredjedel og utover (>33 %)'; }
+    reasons.push({t:'Radiografisk beintap '+rblpct+' % → '+third+' → utgangspunkt Stadium '+stageRoman[base]+' (CAL ikke angitt).'});
+  }
+  if(base===null) return {stage:null,reasons:[{t:'Angi interdentalt CAL eller radiografisk beintap (%) for å bestemme stadium.'}]};
+
+  let stage=base;
+  if(tl==='5+'){ stage=Math.max(stage,4); reasons.push({t:'Tanntap ≥ 5 tenner pga. periodontitt → minimum Stadium IV.'}); }
+  else if(tl==='1-4'){ if(stage<3) reasons.push({t:'Tanntap 1–4 tenner pga. periodontitt → minimum Stadium III.'}); stage=Math.max(stage,3); }
+
+  let p3=[];
+  if(maxpd!==null && maxpd>=6) p3.push('maks lommedybde ≥ 6 mm');
+  if(vertical) p3.push('vertikal bendefekt ≥ 3 mm');
+  if(furcation) p3.push('furkasjon grad II/III');
+  if(p3.length){ if(stage<3) reasons.push({t:'Kompleksitet ('+p3.join(', ')+') → minimum Stadium III.'}); stage=Math.max(stage,3); }
+
+  let p4=[];
+  if(mobility) p4.push('tannmobilitet grad ≥ 2 / sekundært okklusalt traume');
+  if(masticatory) p4.push('tyggefunksjonssvikt / bittkollaps / drifting');
+  if(under20) p4.push('< 20 gjenværende tenner');
+  if(rehab) p4.push('behov for kompleks rehabilitering');
+  if(p4.length){ if(stage<4) reasons.push({t:'Kompleksitet ('+p4.join(', ')+') → Stadium IV.'}); stage=Math.max(stage,4); }
+
+  return {stage,reasons};
+}
+
+function computeGrade(){
+  const rblpct=num('rblpct'), age=num('age');
+  const phenotype=gv('phenotype'), smoking=gv('smoking'), diabetes=gv('diabetes');
+  let reasons=[], primary='B', ratio=null, haveRatio=false;
+
+  if(rblpct!==null && age!==null && age>0){
+    ratio=rblpct/age; haveRatio=true;
+    let g = ratio>1.0?'C' : (ratio>=0.25?'B':'A');
+    primary=g;
+    const bracket = ratio>1.0?'> 1,0' : (ratio>=0.25?'0,25–1,0':'< 0,25');
+    reasons.push({t:'Beintap/alder = '+rblpct+' % / '+age+' år = '+ratio.toFixed(2).replace('.',',')+' ('+bracket+') → Grad '+g+'.'});
+  } else {
+    reasons.push({t:'Beintap %/alder ikke angitt → antar utgangspunkt Grad B.'});
+  }
+
+  if(phenotype){
+    if(gradeRank[phenotype]>gradeRank[primary]){
+      reasons.push({t:'Fenotype ('+L.phenotype[phenotype].split('–')[1].trim()+') → hever til Grad '+phenotype+'.'});
+      primary=phenotype;
+    } else {
+      reasons.push({t:'Fenotype: '+L.phenotype[phenotype].split('–')[1].trim()+' (Grad '+phenotype+').'});
     }
+  }
 
-    // Initialize after ensuring plugin is loaded
-    document.addEventListener("DOMContentLoaded", function() {
-      setTimeout(initCalculator, 100);
-    });
-  </script>
+  let grade=primary, mods=[], modGrade='A';
+  if(smoking==='ge10'){ modGrade='C'; mods.push('røyking ≥ 10 sig/dag'); }
+  else if(smoking==='lt10'){ if(gradeRank.B>gradeRank[modGrade]) modGrade='B'; mods.push('røyking < 10 sig/dag'); }
+  if(diabetes==='ge7'){ modGrade='C'; mods.push('diabetes med HbA1c ≥ 7 %'); }
+  else if(diabetes==='lt7'){ if(gradeRank.B>gradeRank[modGrade]) modGrade='B'; mods.push('diabetes med HbA1c < 7 %'); }
+
+  if(mods.length){
+    if(gradeRank[modGrade]>gradeRank[grade]){
+      reasons.push({t:'Risikofaktor: '+mods.join('; ')+' → hever til Grad '+modGrade+'.',warn:true});
+      grade=modGrade;
+    } else {
+      reasons.push({t:'Risikofaktor registrert: '+mods.join('; ')+' (endrer ikke grad oppover).'});
+    }
+  }
+  return {grade,reasons,ratio,haveRatio};
+}
+
+function extentLabel(){ const e=gv('extent'); return e?{localized:'Lokalisert',generalized:'Generalisert',molarincisor:'Molar-incisiv'}[e]:null; }
+
+function buildDiagnosis(stage,grade,extShort){
+  if(stage===null) return null;
+  let prefix;
+  if(extShort==='Molar-incisiv') prefix='Molar-incisiv periodontitt';
+  else if(extShort) prefix=extShort+' periodontitt';
+  else prefix='Periodontitt';
+  return prefix+', Stadium '+stageRoman[stage]+', Grad '+grade;
+}
+
+function fmtDate(v){ if(!v) return '—'; const p=v.split('-'); return p[2]+'.'+p[1]+'.'+p[0]; }
+
+function complexityList(){
+  const c=[];
+  if(num('maxpd')!==null) c.push('Maks lommedybde: '+num('maxpd')+' mm');
+  if(chk('vertical')) c.push('Vertikal bendefekt ≥ 3 mm');
+  if(chk('furcation')) c.push('Furkasjon grad II/III');
+  if(chk('mobility')) c.push('Tannmobilitet grad ≥ 2 / sek. okklusalt traume');
+  if(chk('masticatory')) c.push('Tyggefunksjonssvikt / bittkollaps / drifting');
+  if(chk('under20')) c.push('< 20 gjenværende tenner');
+  if(chk('rehab')) c.push('Behov for kompleks rehabilitering');
+  return c;
+}
+
+function recompute(){
+  const s=computeStage(), g=computeGrade();
+  const extShort=extentLabel();
+
+  // Stage pill
+  if(s.stage){
+    $('stageVal').textContent=stageRoman[s.stage];
+    $('stageSub').textContent=stageName[s.stage];
+    $('stagePill').setAttribute('data-sev',String(s.stage));
+  } else {
+    $('stageVal').textContent='—'; $('stageSub').textContent=''; $('stagePill').removeAttribute('data-sev');
+  }
+
+  // Grade pill — only meaningful once stage exists
+  if(s.stage){
+    $('gradeVal').textContent=g.grade;
+    $('gradeSub').textContent=gradeName[g.grade];
+    $('gradePill').setAttribute('data-grade',g.grade);
+  } else {
+    $('gradeVal').textContent='—'; $('gradeSub').textContent=''; $('gradePill').removeAttribute('data-grade');
+  }
+
+  // Diagnosis line
+  const dx=buildDiagnosis(s.stage,g.grade,extShort);
+  $('dxText').innerHTML = dx ? dx : '<span class="dxhint">Angi CAL eller beintap (%) for å starte.</span>';
+
+  // RBL % — live hint (anatomic third) under the field, and echo in the grade section
+  const rblpct=num('rblpct');
+  if(rblpct!==null){
+    let third = rblpct<15?'coronale tredjedel' : (rblpct<=33?'coronale tredjedel (øvre del)':'midtre tredjedel og utover');
+    $('rblHint').textContent = rblpct+' % · '+third;
+    $('rblEcho').textContent = rblpct+' % av rotlengde';
+    $('rblEcho').style.borderStyle='solid'; $('rblEcho').style.color='var(--ink)';
+  } else {
+    $('rblHint').textContent='';
+    $('rblEcho').textContent='— fylles inn under «Stadium»';
+    $('rblEcho').style.borderStyle='dashed'; $('rblEcho').style.color='var(--muted)';
+  }
+
+  // Ratio box
+  if(g.haveRatio){ $('ratioBox').style.display='flex'; $('ratioVal').textContent=g.ratio.toFixed(2).replace('.',','); }
+  else { $('ratioBox').style.display='none'; }
+
+  // Reasoning
+  const render=(el,arr)=>{ el.innerHTML=''; arr.forEach(r=>{const li=document.createElement('li'); if(r.warn) li.className='warn'; li.textContent=r.t; el.appendChild(li);}); };
+  render($('stageWhy'), s.reasons);
+  render($('gradeWhy'), s.stage?g.reasons:[{t:'Grad beregnes når stadium er fastsatt.'}]);
+
+  buildReport(s,g,extShort,dx);
+}
+
+function buildReport(s,g,extShort,dx){
+  const comp=complexityList();
+  const li=arr=>arr.length?arr.map(x=>'<li>'+x+'</li>').join(''):'<li>Ingen registrert.</li>';
+  const reasonLi=arr=>arr.map(r=>'<li>'+r.t+'</li>').join('');
+
+  let html='';
+  html+='<div class="rep-head"><div><h1>Periodontitt-klassifisering</h1><div class="src">Stadium &amp; Grad · AAP/EFP 2017</div></div>';
+  html+='<div class="rep-meta">Dato: '+fmtDate($('repdate').value)+'<br>Referanse: '+(($('repref').value||'').trim()||'—')+'</div></div>';
+
+  html+='<div class="rep-dxlabel">Diagnose</div>';
+  html+='<div class="rep-dx">'+(dx?dx:'Ufullstendig – mangler CAL eller beintap (%)')+'</div>';
+
+  html+='<div class="rep-section"><h2>Grunnlag for stadium</h2><ul>'+reasonLi(s.reasons)+'</ul></div>';
+  if(s.stage){
+    html+='<div class="rep-section"><h2>Grunnlag for grad</h2><ul>'+reasonLi(g.reasons)+'</ul></div>';
+  }
+
+  html+='<div class="rep-section"><h2>Registrerte funn</h2><table class="rep-tbl">';
+  html+='<tr><td class="lab">Interdentalt CAL (størst tap)</td><td>'+lab('cal')+'</td></tr>';
+  html+='<tr><td class="lab">Radiografisk beintap</td><td>'+(num('rblpct')!==null?num('rblpct')+' % av rotlengde':'Ikke angitt')+'</td></tr>';
+  html+='<tr><td class="lab">Tanntap pga. periodontitt</td><td>'+lab('toothloss')+'</td></tr>';
+  html+='<tr><td class="lab">Kompleksitetsfaktorer</td><td>'+(comp.length?'<ul style="margin:0;padding-left:16px;">'+li(comp)+'</ul>':'Ingen registrert')+'</td></tr>';
+  html+='<tr><td class="lab">Utbredelse</td><td>'+lab('extent')+'</td></tr>';
+  html+='<tr><td class="lab">Beintap / alder</td><td>'+(g.haveRatio?(num('rblpct')+' % / '+num('age')+' år = '+g.ratio.toFixed(2).replace('.',',')):'Ikke angitt')+'</td></tr>';
+  html+='<tr><td class="lab">Fenotype</td><td>'+lab('phenotype')+'</td></tr>';
+  html+='<tr><td class="lab">Røyking</td><td>'+lab('smoking')+'</td></tr>';
+  html+='<tr><td class="lab">Diabetes</td><td>'+lab('diabetes')+'</td></tr>';
+  html+='</table></div>';
+
+  html+='<div class="rep-sign"><div class="line">Behandler / signatur</div><div class="line">Dato</div></div>';
+  html+='<div class="rep-foot">Klassifisering etter 2017 World Workshop (AAP/EFP). Stadium bestemmes av alvorlighetsgrad (CAL/RBL/tanntap), kompleksitet og utbredelse; grad av forholdet beintap/alder med røyking og diabetes som modifikatorer. Dette dokumentet er klinisk beslutningsstøtte og erstatter ikke behandlers faglige vurdering.</div>';
+
+  $('report').innerHTML=html;
+}
+
+function reset(){
+  document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
+  document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
+  ['maxpd','rblpct','age'].forEach(id=>$(id).value='');
+  recompute();
+}
+
+document.addEventListener('input',recompute);
+document.addEventListener('change',recompute);
+$('printBtn').addEventListener('click',()=>window.print());
+$('resetBtn').addEventListener('click',reset);
+
+// default date = today
+(function(){ const d=new Date(); const z=n=>String(n).padStart(2,'0'); $('repdate').value=d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate()); })();
+recompute();
+</script>
 </body>
 </html>
