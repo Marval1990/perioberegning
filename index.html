@@ -112,6 +112,14 @@ input:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-co
 
 .note{font-size:11.5px;color:var(--muted);margin-top:16px;line-height:1.45;border-top:1px solid var(--line);padding-top:12px;}
 
+/* ---------- Warnings & provisional ---------- */
+.warnbanner{display:none;flex-direction:column;gap:6px;margin-top:14px;}
+.warnbanner .w{font-size:12.5px;line-height:1.4;padding:9px 12px;border-radius:9px;border:1px solid #e6c9a8;background:#fbf1e3;color:#8a5a18;}
+.warnbanner .w.err{border-color:#e0b4a6;background:#f9e8e1;color:#8a3a1c;font-weight:600;}
+.badge-prov{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8a5a18;background:#f7ead2;border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:middle;}
+.cd-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.45;}
+.cd-warn{display:none;font-size:12px;font-weight:600;color:#8a5a18;background:#fbf1e3;border:1px solid #e6c9a8;border-radius:8px;padding:8px 11px;margin-top:10px;}
+
 /* ---------- Toolbar ---------- */
 .toolbar{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;}
 button.btn{font:inherit;font-weight:600;font-size:14px;padding:11px 18px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:filter .12s;}
@@ -169,6 +177,18 @@ table.rep-tbl td.lab{color:var(--muted);width:42%;}
   <!-- ============ INPUTS ============ -->
   <div class="inputs">
 
+    <!-- 0. CASE DEFINITION -->
+    <section class="card">
+      <div class="shead"><span class="n">✓</span><h2>Kasusdefinisjon</h2></div>
+      <p class="sub">Bekreft at pasienten faktisk oppfyller periodontitt-kasusdefinisjonen (2018) før stadium og grad settes.</p>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="cdcal"><span class="txt">Interdentalt festetap ved ≥ 2 ikke-tilstøtende tenner<small>eller buccal/oral CAL ≥ 3 mm med lomme &gt; 3 mm ved ≥ 2 tenner</small></span></label>
+        <label class="check"><input type="checkbox" id="cdcause"><span class="txt">Festetapet skyldes periodontitt<small>ikke traume, cervikal karies, endo-/perioskade, rotfraktur, visdomstann e.l.</small></span></label>
+      </div>
+      <div class="cd-note">Verktøyet beregner uansett, men rapporten merkes «kasusdefinisjon ikke bekreftet» til begge er huket av.</div>
+      <div class="cd-warn" id="cdWarn">Kasusdefinisjon ikke bekreftet — kontroller før diagnosen journalføres.</div>
+    </section>
+
     <!-- 1. STAGING -->
     <section class="card">
       <div class="shead"><span class="n">1</span><h2>Stadium</h2></div>
@@ -208,8 +228,10 @@ table.rep-tbl td.lab{color:var(--muted);width:42%;}
         <div class="checks">
           <label class="check"><input type="checkbox" id="vertical"><span class="txt">Vertikal bendefekt ≥ 3 mm</span><span class="tag t3">→ III</span></label>
           <label class="check"><input type="checkbox" id="furcation"><span class="txt">Furkasjonsinvolvering grad II/III</span><span class="tag t3">→ III</span></label>
+          <label class="check"><input type="checkbox" id="ridgemod"><span class="txt">Moderat ridge-defekt</span><span class="tag t3">→ III</span></label>
           <label class="check"><input type="checkbox" id="mobility"><span class="txt">Tannmobilitet grad ≥ 2<small>sekundært okklusalt traume</small></span><span class="tag t4">→ IV</span></label>
           <label class="check"><input type="checkbox" id="masticatory"><span class="txt">Tyggefunksjonssvikt / bittkollaps<small>drifting, flaring</small></span><span class="tag t4">→ IV</span></label>
+          <label class="check"><input type="checkbox" id="ridgesev"><span class="txt">Alvorlig ridge-defekt</span><span class="tag t4">→ IV</span></label>
           <label class="check"><input type="checkbox" id="under20"><span class="txt">&lt; 20 gjenværende tenner<small>færre enn 10 motstående par</small></span><span class="tag t4">→ IV</span></label>
           <label class="check"><input type="checkbox" id="rehab"><span class="txt">Behov for kompleks rehabilitering</span><span class="tag t4">→ IV</span></label>
         </div>
@@ -228,10 +250,21 @@ table.rep-tbl td.lab{color:var(--muted);width:42%;}
     <!-- 2. GRADING -->
     <section class="card">
       <div class="shead"><span class="n">2</span><h2>Grad</h2></div>
-      <p class="sub">Primærkriteriet er beintap delt på alder. Røyking og diabetes kan heve graden.</p>
+      <p class="sub">Primærkriteriet er progresjonshastighet: direkte evidens hvis tilgjengelig, ellers beintap delt på alder. Røyking og diabetes kan heve graden.</p>
 
       <div class="grp">
-        <div class="lbl">Primærkriterium — beintap / alder</div>
+        <div class="lbl">Primærkriterium — direkte progresjon (≥ 5 år)</div>
+        <div class="seg" role="radiogroup" aria-label="Direkte progresjon">
+          <label><input type="radio" name="direct" value="na" checked><span>Ikke tilgjengelig</span></label>
+          <label><input type="radio" name="direct" value="none"><span>Ingen tap · A</span></label>
+          <label><input type="radio" name="direct" value="lt2"><span>&lt; 2 mm · B</span></label>
+          <label><input type="radio" name="direct" value="ge2"><span>≥ 2 mm · C</span></label>
+        </div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45;">Radiografisk beintap eller CAL-endring over minst 5 år. Overstyrer beintap/alder når den er angitt.</div>
+      </div>
+
+      <div class="grp">
+        <div class="lbl">Indirekte — beintap / alder <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);">(brukes når direkte mangler)</span></div>
         <div class="row2">
           <div class="field"><label for="age">Alder (år)</label><input type="number" id="age" min="1" max="120" step="1" inputmode="numeric"></div>
           <div class="field"><label>Radiografisk beintap</label><div id="rblEcho" style="padding:9px 11px;border:1px dashed var(--line-strong);border-radius:var(--radius-sm);font-size:14px;color:var(--muted);background:var(--surface-2);">— fylles inn under «Stadium»</div></div>
@@ -262,6 +295,7 @@ table.rep-tbl td.lab{color:var(--muted);width:42%;}
           <label><input type="radio" name="diabetes" value="none"><span>Ingen</span></label>
           <label><input type="radio" name="diabetes" value="lt7"><span>HbA1c &lt; 7 %</span></label>
           <label><input type="radio" name="diabetes" value="ge7"><span>HbA1c ≥ 7 %</span></label>
+          <label><input type="radio" name="diabetes" value="dunk"><span>Kjent · HbA1c ukjent</span></label>
         </div>
       </div>
     </section>
@@ -276,6 +310,8 @@ table.rep-tbl td.lab{color:var(--muted);width:42%;}
         <div class="pill" id="stagePill"><div class="k">Stadium</div><div class="v" id="stageVal">—</div><div class="vsub" id="stageSub"></div></div>
         <div class="pill" id="gradePill"><div class="k">Grad</div><div class="v" id="gradeVal">—</div><div class="vsub" id="gradeSub"></div></div>
       </div>
+
+      <div class="warnbanner" id="warnBanner"></div>
 
       <div class="dx">
         <div class="dxk">Diagnose</div>
@@ -327,16 +363,38 @@ const L={
   extent:{localized:'Lokalisert (<30 %)',generalized:'Generalisert (≥30 %)',molarincisor:'Molar-incisiv-mønster'},
   phenotype:{A:'Grad A – kraftig biofilm, lite destruksjon',B:'Grad B – destruksjon i samsvar med biofilm',C:'Grad C – destruksjon overstiger biofilmnivå / rask progresjon'},
   smoking:{non:'Ikke-røyker',lt10:'< 10 sigaretter/dag',ge10:'≥ 10 sigaretter/dag'},
-  diabetes:{none:'Ingen / normoglykemi',lt7:'HbA1c < 7 %',ge7:'HbA1c ≥ 7 %'}
+  diabetes:{none:'Ingen / normoglykemi',lt7:'HbA1c < 7 %',ge7:'HbA1c ≥ 7 %',dunk:'Diabetes, HbA1c ukjent'}
 };
 const lab=name=>{const v=gv(name);return v?L[name][v]:'Ikke angitt';};
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function validate(){
+  const warns=[];
+  const rblpct=num('rblpct'), age=num('age'), maxpd=num('maxpd'), cal=gv('cal'), diabetes=gv('diabetes');
+  if(rblpct!==null && (rblpct<0 || rblpct>100)) warns.push({t:'Beintap må være mellom 0 og 100 %.',err:true,block:true});
+  if(age!==null && age<=0) warns.push({t:'Alder må være større enn 0.',err:true,block:true});
+  if(age!==null && age>120) warns.push({t:'Kontroller alder — verdien er over 120 år.',err:true,block:true});
+  if(maxpd!==null && (maxpd<0 || maxpd>20)) warns.push({t:'Maks lommedybde må være mellom 0 og 20 mm.',err:true,block:true});
+  // Inkonsistens: CAL-kategori vs beintapsprosent
+  if(cal && rblpct!==null && rblpct>=0 && rblpct<=100){
+    const calStage=parseInt(cal,10);
+    const rblStage = rblpct<15?1:(rblpct<=33?2:3);
+    if(Math.abs(calStage-rblStage)>=2) warns.push({t:'CAL ('+L.cal[cal]+') og beintap ('+rblpct+' %) spriker betydelig — kontroller registreringene.'});
+  }
+  // Lav CAL, men dyp lomme
+  if(cal==='1' && maxpd!==null && maxpd>=6) warns.push({t:'CAL 1–2 mm, men lommedybde ≥ 6 mm — kontroller om dette er ekte festetap eller pseudolomme/inflammasjon.'});
+  // Diabetes uten kjent HbA1c
+  if(diabetes==='dunk') warns.push({t:'Diabetes oppgitt uten kjent HbA1c — innhent HbA1c før endelig grading.'});
+  return warns;
+}
 
 function computeStage(){
   const cal=gv('cal'), tl=gv('toothloss');
   const rblpct=num('rblpct');
   const maxpd=num('maxpd');
-  const vertical=chk('vertical'), furcation=chk('furcation');
-  const mobility=chk('mobility'), masticatory=chk('masticatory'), under20=chk('under20'), rehab=chk('rehab');
+  const vertical=chk('vertical'), furcation=chk('furcation'), ridgemod=chk('ridgemod');
+  const mobility=chk('mobility'), masticatory=chk('masticatory'), ridgesev=chk('ridgesev'), under20=chk('under20'), rehab=chk('rehab');
   let reasons=[], base=null;
 
   if(cal){
@@ -352,18 +410,29 @@ function computeStage(){
   if(base===null) return {stage:null,reasons:[{t:'Angi interdentalt CAL eller radiografisk beintap (%) for å bestemme stadium.'}]};
 
   let stage=base;
+
+  // Tanntap pga. periodontitt
   if(tl==='5+'){ stage=Math.max(stage,4); reasons.push({t:'Tanntap ≥ 5 tenner pga. periodontitt → minimum Stadium IV.'}); }
   else if(tl==='1-4'){ if(stage<3) reasons.push({t:'Tanntap 1–4 tenner pga. periodontitt → minimum Stadium III.'}); stage=Math.max(stage,3); }
 
+  // Maks lommedybde: ≤4 mm = Stadium I-tak, 5 mm = Stadium II-tak, ≥6 mm → Stadium III
+  if(maxpd!==null){
+    if(maxpd>=6){ if(stage<3) reasons.push({t:'Maks lommedybde ≥ 6 mm → minimum Stadium III.'}); stage=Math.max(stage,3); }
+    else if(maxpd>=5){ if(stage<2) reasons.push({t:'Maks lommedybde 5 mm er forenlig med Stadium II-kompleksitet og overstiger Stadium I-taket (≤ 4 mm) → vurder minimum Stadium II. Bruk klinisk skjønn ved pseudolommer/inflammasjon.'}); stage=Math.max(stage,2); }
+  }
+
+  // Kompleksitet → Stadium III
   let p3=[];
-  if(maxpd!==null && maxpd>=6) p3.push('maks lommedybde ≥ 6 mm');
   if(vertical) p3.push('vertikal bendefekt ≥ 3 mm');
   if(furcation) p3.push('furkasjon grad II/III');
+  if(ridgemod) p3.push('moderat ridge-defekt');
   if(p3.length){ if(stage<3) reasons.push({t:'Kompleksitet ('+p3.join(', ')+') → minimum Stadium III.'}); stage=Math.max(stage,3); }
 
+  // Kompleksitet → Stadium IV
   let p4=[];
   if(mobility) p4.push('tannmobilitet grad ≥ 2 / sekundært okklusalt traume');
   if(masticatory) p4.push('tyggefunksjonssvikt / bittkollaps / drifting');
+  if(ridgesev) p4.push('alvorlig ridge-defekt');
   if(under20) p4.push('< 20 gjenværende tenner');
   if(rehab) p4.push('behov for kompleks rehabilitering');
   if(p4.length){ if(stage<4) reasons.push({t:'Kompleksitet ('+p4.join(', ')+') → Stadium IV.'}); stage=Math.max(stage,4); }
@@ -373,28 +442,46 @@ function computeStage(){
 
 function computeGrade(){
   const rblpct=num('rblpct'), age=num('age');
+  const direct=gv('direct');
   const phenotype=gv('phenotype'), smoking=gv('smoking'), diabetes=gv('diabetes');
-  let reasons=[], primary='B', ratio=null, haveRatio=false;
+  let reasons=[], primary='B', ratio=null, haveRatio=false, provisional=false, src='assumed';
 
-  if(rblpct!==null && age!==null && age>0){
-    ratio=rblpct/age; haveRatio=true;
-    let g = ratio>1.0?'C' : (ratio>=0.25?'B':'A');
-    primary=g;
+  if(rblpct!==null && age!==null && age>0){ ratio=rblpct/age; haveRatio=true; }
+
+  if(direct && direct!=='na'){
+    primary={none:'A',lt2:'B',ge2:'C'}[direct]; src='direct';
+    const dtxt={none:'ingen tap over ≥ 5 år',lt2:'< 2 mm tap over ≥ 5 år',ge2:'≥ 2 mm tap over ≥ 5 år'}[direct];
+    reasons.push({t:'Direkte evidens ('+dtxt+') → Grad '+primary+' (primærkriterium, overstyrer beintap/alder).'});
+  } else if(haveRatio){
+    primary = ratio>1.0?'C' : (ratio>=0.25?'B':'A'); src='ratio';
     const bracket = ratio>1.0?'> 1,0' : (ratio>=0.25?'0,25–1,0':'< 0,25');
-    reasons.push({t:'Beintap/alder = '+rblpct+' % / '+age+' år = '+ratio.toFixed(2).replace('.',',')+' ('+bracket+') → Grad '+g+'.'});
+    reasons.push({t:'Beintap/alder = '+rblpct+' % / '+age+' år = '+ratio.toFixed(2).replace('.',',')+' ('+bracket+') → Grad '+primary+'.'});
   } else {
-    reasons.push({t:'Beintap %/alder ikke angitt → antar utgangspunkt Grad B.'});
+    provisional=true; src='assumed';
+    reasons.push({t:'Verken direkte progresjon eller beintap/alder er angitt → Grad B antas inntil videre (jf. «anta B, søk evidens for A eller C»).'});
   }
 
+  // Fenotype: støttende indirekte indikator, mer subjektiv enn de objektive kriteriene.
   if(phenotype){
-    if(gradeRank[phenotype]>gradeRank[primary]){
-      reasons.push({t:'Fenotype ('+L.phenotype[phenotype].split('–')[1].trim()+') → hever til Grad '+phenotype+'.'});
-      primary=phenotype;
+    const ptxt=L.phenotype[phenotype].split('–')[1].trim();
+    if(src==='direct'){
+      reasons.push({t:'Fenotype: '+ptxt+' (Grad '+phenotype+') — direkte evidens er primær og beholdes.'});
+    } else if(src==='ratio'){
+      if(gradeRank[phenotype]>gradeRank[primary]){ reasons.push({t:'Fenotype ('+ptxt+') → hever til Grad '+phenotype+'.'}); primary=phenotype; }
+      else { reasons.push({t:'Fenotype: '+ptxt+' (Grad '+phenotype+') — støtter, men senker ikke beintap/alder-grunnlaget.'}); }
     } else {
-      reasons.push({t:'Fenotype: '+L.phenotype[phenotype].split('–')[1].trim()+' (Grad '+phenotype+').'});
+      // Ingen objektive data: fenotype brukes som foreløpig grunnlag, men forblir antatt (subjektiv).
+      primary=phenotype;
+      reasons.push({t:'Fenotype ('+ptxt+') brukt som foreløpig indirekte grunnlag → Grad '+phenotype+'. Subjektivt; forblir antatt til direkte progresjon eller beintap/alder foreligger.'});
     }
   }
 
+  // Diabetes uten kjent HbA1c — B/C-modifikator kan ikke fastsettes.
+  if(diabetes==='dunk'){
+    reasons.push({t:'Diabetes oppgitt uten kjent HbA1c → B/C-modifikator kan ikke fastsettes. Innhent HbA1c før endelig grad.'});
+  }
+
+  // Risikofaktorer (røyking, diabetes med kjent HbA1c) — hever kun
   let grade=primary, mods=[], modGrade='A';
   if(smoking==='ge10'){ modGrade='C'; mods.push('røyking ≥ 10 sig/dag'); }
   else if(smoking==='lt10'){ if(gradeRank.B>gradeRank[modGrade]) modGrade='B'; mods.push('røyking < 10 sig/dag'); }
@@ -404,12 +491,14 @@ function computeGrade(){
   if(mods.length){
     if(gradeRank[modGrade]>gradeRank[grade]){
       reasons.push({t:'Risikofaktor: '+mods.join('; ')+' → hever til Grad '+modGrade+'.',warn:true});
-      grade=modGrade;
+      grade=modGrade; provisional=false;
     } else {
-      reasons.push({t:'Risikofaktor registrert: '+mods.join('; ')+' (endrer ikke grad oppover).'});
+      let txt='Risikofaktor registrert: '+mods.join('; ')+' (Grad '+modGrade+'-modifikator; hever ikke graden).';
+      if(provisional) txt+=' Progresjonshastighet er ikke vurdert, så graden forblir antatt.';
+      reasons.push({t:txt});
     }
   }
-  return {grade,reasons,ratio,haveRatio};
+  return {grade,reasons,ratio,haveRatio,provisional};
 }
 
 function extentLabel(){ const e=gv('extent'); return e?{localized:'Lokalisert',generalized:'Generalisert',molarincisor:'Molar-incisiv'}[e]:null; }
@@ -430,16 +519,55 @@ function complexityList(){
   if(num('maxpd')!==null) c.push('Maks lommedybde: '+num('maxpd')+' mm');
   if(chk('vertical')) c.push('Vertikal bendefekt ≥ 3 mm');
   if(chk('furcation')) c.push('Furkasjon grad II/III');
+  if(chk('ridgemod')) c.push('Moderat ridge-defekt');
   if(chk('mobility')) c.push('Tannmobilitet grad ≥ 2 / sek. okklusalt traume');
   if(chk('masticatory')) c.push('Tyggefunksjonssvikt / bittkollaps / drifting');
+  if(chk('ridgesev')) c.push('Alvorlig ridge-defekt');
   if(chk('under20')) c.push('< 20 gjenværende tenner');
   if(chk('rehab')) c.push('Behov for kompleks rehabilitering');
   return c;
 }
 
 function recompute(){
+  const warns=validate();
+  const blocked = warns.some(w=>w.block);
   const s=computeStage(), g=computeGrade();
   const extShort=extentLabel();
+
+  // Warnings banner
+  const wb=$('warnBanner');
+  if(warns.length){ wb.style.display='flex'; wb.innerHTML=warns.map(w=>'<div class="w'+(w.err?' err':'')+'">'+esc(w.t)+'</div>').join(''); }
+  else { wb.style.display='none'; wb.innerHTML=''; }
+
+  // Case definition flag
+  const cdOk = chk('cdcal') && chk('cdcause');
+  $('cdWarn').style.display = cdOk ? 'none' : 'block';
+
+  // RBL % — live hint and echo
+  const rblpct=num('rblpct');
+  if(rblpct!==null && rblpct>=0 && rblpct<=100){
+    let third = rblpct<15?'coronale tredjedel' : (rblpct<=33?'coronale tredjedel (øvre del)':'midtre tredjedel og utover');
+    $('rblHint').textContent = rblpct+' % · '+third;
+    $('rblEcho').textContent = rblpct+' % av rotlengde';
+    $('rblEcho').style.borderStyle='solid'; $('rblEcho').style.color='var(--ink)';
+  } else {
+    $('rblHint').textContent = (rblpct!==null?'Ugyldig verdi (0–100 %)':'');
+    $('rblEcho').textContent='— fylles inn under «Stadium»';
+    $('rblEcho').style.borderStyle='dashed'; $('rblEcho').style.color='var(--muted)';
+  }
+
+  const renderList=(el,arr)=>{ el.innerHTML=''; arr.forEach(r=>{const li=document.createElement('li'); if(r.warn) li.className='warn'; li.textContent=r.t; el.appendChild(li);}); };
+
+  if(blocked){
+    $('stageVal').textContent='—'; $('stageSub').textContent=''; $('stagePill').removeAttribute('data-sev');
+    $('gradeVal').textContent='—'; $('gradeSub').textContent=''; $('gradePill').removeAttribute('data-grade');
+    $('dxText').innerHTML='<span class="dxhint" style="color:#8a3a1c;font-weight:600;">Kan ikke beregne — korriger ugyldige verdier.</span>';
+    $('ratioBox').style.display='none';
+    renderList($('stageWhy'), [{t:'Korriger ugyldige verdier for å beregne.'}]);
+    renderList($('gradeWhy'), [{t:'Korriger ugyldige verdier for å beregne.'}]);
+    buildReport(s,g,extShort,null,warns,cdOk,true);
+    return;
+  }
 
   // Stage pill
   if(s.stage){
@@ -452,8 +580,8 @@ function recompute(){
 
   // Grade pill — only meaningful once stage exists
   if(s.stage){
-    $('gradeVal').textContent=g.grade;
-    $('gradeSub').textContent=gradeName[g.grade];
+    $('gradeVal').innerHTML = g.provisional ? g.grade+'<span class="badge-prov">antatt</span>' : g.grade;
+    $('gradeSub').textContent = g.provisional ? gradeName[g.grade]+' · antatt' : gradeName[g.grade];
     $('gradePill').setAttribute('data-grade',g.grade);
   } else {
     $('gradeVal').textContent='—'; $('gradeSub').textContent=''; $('gradePill').removeAttribute('data-grade');
@@ -461,64 +589,68 @@ function recompute(){
 
   // Diagnosis line
   const dx=buildDiagnosis(s.stage,g.grade,extShort);
-  $('dxText').innerHTML = dx ? dx : '<span class="dxhint">Angi CAL eller beintap (%) for å starte.</span>';
-
-  // RBL % — live hint (anatomic third) under the field, and echo in the grade section
-  const rblpct=num('rblpct');
-  if(rblpct!==null){
-    let third = rblpct<15?'coronale tredjedel' : (rblpct<=33?'coronale tredjedel (øvre del)':'midtre tredjedel og utover');
-    $('rblHint').textContent = rblpct+' % · '+third;
-    $('rblEcho').textContent = rblpct+' % av rotlengde';
-    $('rblEcho').style.borderStyle='solid'; $('rblEcho').style.color='var(--ink)';
-  } else {
-    $('rblHint').textContent='';
-    $('rblEcho').textContent='— fylles inn under «Stadium»';
-    $('rblEcho').style.borderStyle='dashed'; $('rblEcho').style.color='var(--muted)';
-  }
+  const dxDisplay = dx ? (g.provisional ? dx+' <span style="color:var(--muted);font-size:14px;">(grad antatt)</span>' : dx) : '<span class="dxhint">Angi CAL eller beintap (%) for å starte.</span>';
+  $('dxText').innerHTML = dxDisplay;
 
   // Ratio box
   if(g.haveRatio){ $('ratioBox').style.display='flex'; $('ratioVal').textContent=g.ratio.toFixed(2).replace('.',','); }
   else { $('ratioBox').style.display='none'; }
 
   // Reasoning
-  const render=(el,arr)=>{ el.innerHTML=''; arr.forEach(r=>{const li=document.createElement('li'); if(r.warn) li.className='warn'; li.textContent=r.t; el.appendChild(li);}); };
-  render($('stageWhy'), s.reasons);
-  render($('gradeWhy'), s.stage?g.reasons:[{t:'Grad beregnes når stadium er fastsatt.'}]);
+  renderList($('stageWhy'), s.reasons);
+  renderList($('gradeWhy'), s.stage?g.reasons:[{t:'Grad beregnes når stadium er fastsatt.'}]);
 
-  buildReport(s,g,extShort,dx);
+  buildReport(s,g,extShort,dx,warns,cdOk,false);
 }
 
-function buildReport(s,g,extShort,dx){
+function buildReport(s,g,extShort,dx,warns,cdOk,blocked){
   const comp=complexityList();
-  const li=arr=>arr.length?arr.map(x=>'<li>'+x+'</li>').join(''):'<li>Ingen registrert.</li>';
-  const reasonLi=arr=>arr.map(r=>'<li>'+r.t+'</li>').join('');
+  const li=arr=>arr.length?arr.map(x=>'<li>'+esc(x)+'</li>').join(''):'<li>Ingen registrert.</li>';
+  const reasonLi=arr=>arr.map(r=>'<li>'+esc(r.t)+'</li>').join('');
+  const directLab={na:'Ikke tilgjengelig',none:'Ingen tap over ≥ 5 år (A)',lt2:'< 2 mm over ≥ 5 år (B)',ge2:'≥ 2 mm over ≥ 5 år (C)'}[gv('direct')||'na'];
 
   let html='';
-  html+='<div class="rep-head"><div><h1>Periodontitt-klassifisering</h1><div class="src">Stadium &amp; Grad · AAP/EFP 2017</div></div>';
-  html+='<div class="rep-meta">Dato: '+fmtDate($('repdate').value)+'<br>Referanse: '+(($('repref').value||'').trim()||'—')+'</div></div>';
+  html+='<div class="rep-head"><div><h1>Periodontitt-klassifisering</h1><div class="src">Stadium &amp; Grad · AAP/EFP 2017/2018</div></div>';
+  html+='<div class="rep-meta">Dato: '+fmtDate($('repdate').value)+'<br>Referanse: '+(esc(($('repref').value||'').trim())||'—')+'</div></div>';
 
   html+='<div class="rep-dxlabel">Diagnose</div>';
-  html+='<div class="rep-dx">'+(dx?dx:'Ufullstendig – mangler CAL eller beintap (%)')+'</div>';
+  if(blocked){
+    html+='<div class="rep-dx" style="color:#8a3a1c;">Kan ikke beregne — ugyldige verdier</div>';
+  } else {
+    const dxRep = dx ? (g.provisional?dx+' (grad antatt)':dx) : 'Ufullstendig – mangler CAL eller beintap (%)';
+    html+='<div class="rep-dx">'+esc(dxRep)+'</div>';
+    if(!cdOk) html+='<div style="font-size:12px;color:#8a5a18;margin:2px 0 0;font-weight:600;">⚠ Kasusdefinisjon ikke bekreftet.</div>';
+  }
 
-  html+='<div class="rep-section"><h2>Grunnlag for stadium</h2><ul>'+reasonLi(s.reasons)+'</ul></div>';
-  if(s.stage){
-    html+='<div class="rep-section"><h2>Grunnlag for grad</h2><ul>'+reasonLi(g.reasons)+'</ul></div>';
+  if(warns && warns.length){
+    html+='<div class="rep-section"><h2>Kontrollpunkter</h2><ul>'+warns.map(w=>'<li>'+esc(w.t)+'</li>').join('')+'</ul></div>';
+  }
+
+  if(!blocked){
+    html+='<div class="rep-section"><h2>Grunnlag for stadium</h2><ul>'+reasonLi(s.reasons)+'</ul></div>';
+    if(s.stage){
+      html+='<div class="rep-section"><h2>Grunnlag for grad</h2><ul>'+reasonLi(g.reasons)+'</ul></div>';
+    }
   }
 
   html+='<div class="rep-section"><h2>Registrerte funn</h2><table class="rep-tbl">';
+  html+='<tr><td class="lab">Kasusdefinisjon (2018)</td><td>'+(cdOk?'Bekreftet':'Ikke bekreftet')+'</td></tr>';
   html+='<tr><td class="lab">Interdentalt CAL (størst tap)</td><td>'+lab('cal')+'</td></tr>';
   html+='<tr><td class="lab">Radiografisk beintap</td><td>'+(num('rblpct')!==null?num('rblpct')+' % av rotlengde':'Ikke angitt')+'</td></tr>';
   html+='<tr><td class="lab">Tanntap pga. periodontitt</td><td>'+lab('toothloss')+'</td></tr>';
   html+='<tr><td class="lab">Kompleksitetsfaktorer</td><td>'+(comp.length?'<ul style="margin:0;padding-left:16px;">'+li(comp)+'</ul>':'Ingen registrert')+'</td></tr>';
   html+='<tr><td class="lab">Utbredelse</td><td>'+lab('extent')+'</td></tr>';
+  html+='<tr><td class="lab">Direkte progresjon (≥ 5 år)</td><td>'+directLab+'</td></tr>';
   html+='<tr><td class="lab">Beintap / alder</td><td>'+(g.haveRatio?(num('rblpct')+' % / '+num('age')+' år = '+g.ratio.toFixed(2).replace('.',',')):'Ikke angitt')+'</td></tr>';
   html+='<tr><td class="lab">Fenotype</td><td>'+lab('phenotype')+'</td></tr>';
   html+='<tr><td class="lab">Røyking</td><td>'+lab('smoking')+'</td></tr>';
   html+='<tr><td class="lab">Diabetes</td><td>'+lab('diabetes')+'</td></tr>';
   html+='</table></div>';
 
+  if(!blocked && g.provisional) html+='<div style="font-size:11.5px;color:#8a5a18;margin-top:10px;line-height:1.45;">Grad er antatt fordi verken direkte progresjon eller beintap/alder er angitt (ev. kun støttet av fenotype). Suppler med objektive data for en sikker gradering.</div>';
+
   html+='<div class="rep-sign"><div class="line">Behandler / signatur</div><div class="line">Dato</div></div>';
-  html+='<div class="rep-foot">Klassifisering etter 2017 World Workshop (AAP/EFP). Stadium bestemmes av alvorlighetsgrad (CAL/RBL/tanntap), kompleksitet og utbredelse; grad av forholdet beintap/alder med røyking og diabetes som modifikatorer. Dette dokumentet er klinisk beslutningsstøtte og erstatter ikke behandlers faglige vurdering.</div>';
+  html+='<div class="rep-foot">Klassifisering etter 2017/2018 World Workshop (AAP/EFP). Stadium bestemmes av alvorlighetsgrad (CAL/RBL/tanntap), kompleksitet og utbredelse; grad av progresjonshastighet (direkte evidens, ev. beintap/alder) med røyking og diabetes som modifikatorer. Dette dokumentet er klinisk beslutningsstøtte og erstatter ikke behandlers faglige vurdering.</div>';
 
   $('report').innerHTML=html;
 }
@@ -527,6 +659,7 @@ function reset(){
   document.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
   document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);
   ['maxpd','rblpct','age'].forEach(id=>$(id).value='');
+  const dn=document.querySelector('input[name="direct"][value="na"]'); if(dn) dn.checked=true;
   recompute();
 }
 
