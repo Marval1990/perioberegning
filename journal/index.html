@@ -68,7 +68,10 @@ input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-
 .seg input:checked+span{background:var(--accent);border-color:var(--accent);color:#fff}
 .seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.rows .row{display:grid;grid-template-columns:28px 1fr 1fr 34px;gap:6px;align-items:center;margin-bottom:6px}
+.rows .row{display:grid;gap:6px;align-items:center;margin-bottom:6px}
+.rows .row.head{margin-bottom:2px}
+.rows .row.head span{font-size:.75rem;font-weight:600;color:var(--muted);margin:0}
+.rows select,.rows input{padding:8px 6px}
 .rows .num{color:var(--muted);font-weight:600;text-align:center}
 .btn{font:inherit;font-size:.9rem;border-radius:var(--radius-sm);border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);padding:7px 12px;cursor:pointer}
 .btn:hover{border-color:var(--accent)}
@@ -482,42 +485,81 @@ const M = [
   },
 },
 {
-  id:'ve', phase:'Fase 3', tab:'Vedlikehold', title:'Vedlikeholdsbehandling', takst:'Takst 501',
-  intro:'Støttebehandling med periodontale mål, instruksjon og subgingival depurasjon der det trengs.',
+  id:'ve', phase:'Fase 3', tab:'Vedlikehold', title:'Vedlikeholdsbehandling', takst:'Takst 501 – eller kontroll hvis stabil',
+  intro:'Registrer mål, finn flatene som trenger behandling og depurer selektivt. Er alt stabilt, blir timen en kontroll – ikke 501.',
   helfo:[
-    '501 forutsetter fortsatt systematisk behandling med subgingival depurasjon – ikke rutinemessig tannrens.',
-    'Minst 30 min aktiv behandlingstid. Maks 14 × 501 per kalenderår.',
-    'Dokumenter periodontale mål, plakk, instruksjon og ev. endret prognose.',
+    '501 krever subgingival depurasjon og minst 30 min aktiv behandlingstid. Supragingival rens alene regnes som rutinemessig tannrens og gir ikke stønad.',
+    'Depurer selektivt: flater med PPD ≥ 5 mm, eller 4 mm med BoP. Grunne, friske flater depureres ikke subgingivalt (risiko for festetap).',
+    'Før opp hvilke flater som er depurert, med PPD og BoP – det dokumenterer at behandlingen er målrettet.',
+    'Maks 14 × 501 per kalenderår. God praksis: full registrering i perio-skjema minst én gang i året.',
   ],
   fields:[
-    {sec:'Vedlikehold'},
+    {sec:'Registrering'},
     {k:'mnd', t:'text', label:'Måneder postop / etter aktiv behandling', ph:'f.eks. 6'},
-    {k:'maal', t:'check', label:'Ført/kontrollert periodontale mål', def:true},
+    {k:'reg', t:'radio', label:'Periodontale mål', opts:[['full','Full registrering i perio-skjema'],['sel','Kontrollert behandlede flater']]},
+    {k:'sist', t:'text', label:'Siste fullregistrering', ph:'f.eks. mars 2026', show:v=>v.reg === 'sel'},
     {k:'status', t:'select', label:'Sykdomsstatus', opts:['','Stabil','I remisjon','Ustabil']},
+    {sec:'Behandlingsbehov'},
+    {k:'funn', t:'radio', label:'Funn', opts:[['beh','Lommer som trenger depurasjon'],['stabil','Ingen behandlingskrevende lommer']]},
+    {k:'flater', t:'rows', label:'Flater depurert subgingivalt', cols:[['tann','Tann',{im:'numeric'}],['flate','Flate'],['ppd','PPD mm',{im:'numeric'}],['bop','BoP',{opts:['','+','−']}]],
+      def:[{tann:'',flate:'',ppd:'',bop:''}], show:v=>v.funn === 'beh'},
+    {k:'supra', t:'check', label:'Øvrige flater: supragingival rens', def:true, show:v=>v.funn === 'beh'},
+    {k:'depx', t:'text', label:'Depurasjon – merknad', ph:'f.eks. ultralyd + kyretter, furkasjon 36 b', show:v=>v.funn === 'beh'},
+    {k:'ktakst', t:'radio', label:'Takst for kontrollen', opts:[['4','4'],['5','5'],['egen','Egenbetaling']], show:v=>v.funn === 'stabil'},
+    {sec:'Egenomsorg'},
     ...TOB,
     {k:'plakk', t:'text', label:'Plakk', ph:'f.eks. plakk approksimalt molarer'},
     {k:'instr', t:'text', label:'Instruert', ph:'f.eks. repetert interdentalbørster, ny str. 46–47'},
-    {k:'dep', t:'text', label:'Depurert', ph:'f.eks. subgingivalt lommer ≥ 5 mm m/BoP: 16, 26, 36'},
     {k:'puss', t:'check', label:'Puss m/pasta', def:true},
     {k:'prog', t:'text', label:'Evt. endret prognose', ph:'f.eks. uendret / dårligere prognose 27'},
+    {sec:'Neste time'},
     {k:'ny', t:'radio', label:'Ny kontroll', opts:[['3 mnd','3 mnd'],['4 mnd','4 mnd'],['6 mnd','6 mnd'],['12 mnd','12 mnd']], def:'4 mnd'},
-    ...TIME(),
+    {k:'begr', t:'text', label:'Begrunnelse for intervall', ph:'f.eks. stabil i 2 år, god egenomsorg – forlenget fra 4 til 6 mnd'},
+    ...TIME(v => v.funn !== 'stabil'),
   ],
   build(v) {
-    const w = [], min = +v.min || 0, n = n501(min);
-    const text = join([
-      (t(v.mnd) ? `${t(v.mnd)} mnd postop. ` : '') + 'Vedlikeholdsbehandling.',
-      v.maal && 'Ført/kontrollert periodontale mål.',
-      L('Sykdomsstatus', v.status),
-      tobLine(v), L('Plakk', v.plakk), L('Instruert', v.instr), L('Depurert', v.dep),
-      v.puss && 'Puss m/pasta.', L('Evt. endret prognose', v.prog),
-      min && `Aktiv behandlingstid: ${min} min`,
-      L('Ny kontroll', v.ny),
-    ]);
-    chk501(v, n, w);
-    if (!t(v.dep)) w.push(['err', '501 forutsetter subgingival depurasjon – rutinemessig tannrens gir ikke stønad.']);
-    if (!v.maal) w.push(['warn', 'Periodontale mål er ikke ført/kontrollert.']);
+    const w = [], stab = v.funn === 'stabil';
+    const bop = r => r.bop === '+' ? 'BoP+' : r.bop === '−' ? 'BoP−' : '';
+    const site = r => t(r.tann) + (t(r.flate) ? ' ' + t(r.flate) : '');
+    const fl = (v.flater || []).filter(r => t(r.tann));
+    const flTxt = fl.map(r => { const p = [t(r.ppd) && t(r.ppd) + ' mm', bop(r)].filter(Boolean); return site(r) + (p.length ? ` (${p.join(', ')})` : ''); }).join(', ');
+    const regTxt = {
+      full:'Ført periodontale mål i perio-skjema (PPD, BoP, mobilitet, furkasjoner) – sammenlignet med forrige registrering.',
+      sel:'Kontrollert PPD og BoP på tidligere behandlede flater.' + (t(v.sist) ? ` Siste fullregistrering: ${t(v.sist)}.` : ''),
+    }[v.reg];
+    const head = [(t(v.mnd) ? `${t(v.mnd)} mnd postop. ` : '') + (stab ? 'Vedlikeholdskontroll.' : 'Vedlikeholdsbehandling.'), regTxt, L('Sykdomsstatus', v.status)];
+    const egen = [tobLine(v), L('Plakk', v.plakk), L('Instruert', v.instr)];
+    const tail = [L('Evt. endret prognose', v.prog), L('Ny kontroll', v.ny), L('Begrunnelse for intervall', v.begr)];
+    if (!v.reg) w.push(['warn', 'Velg hvordan periodontale mål er registrert.']);
+    if (v.reg === 'sel' && !t(v.sist)) w.push(['warn', 'God praksis: full registrering minst én gang i året – noter når den sist ble gjort.']);
     if (!t(v.instr)) w.push(['warn', 'Opplæring i egenomsorg er ikke dokumentert.']);
+
+    if (stab) {
+      const text = join([...head,
+        'Ingen behandlingskrevende lommer (ingen PPD ≥ 5 mm, ingen 4 mm med BoP) – ikke indikasjon for subgingival depurasjon.',
+        ...egen, 'Supragingival rens' + (v.puss ? ' og puss m/pasta.' : '.'), ...tail]);
+      w.unshift(['info', 'Ingen subgingival depurasjon – vilkårene for 501 er ikke oppfylt. Supragingival rens alene regnes som rutinemessig tannrens.']);
+      if (!v.ktakst) w.push(['warn', 'Velg takst for kontrollen (sjekk takstbeskrivelsen for 4 og 5) eller egenbetaling.']);
+      if (v.status === 'Ustabil') w.push(['warn', 'Sykdomsstatus «ustabil» passer ikke med «ingen behandlingskrevende lommer».']);
+      const kt = v.ktakst === 'egen' ? 'Egenbetaling' : v.ktakst || 'Kontroll';
+      return {entries:[{t:kt, text}], w, next:`Ny kontroll om ${v.ny || '6 mnd'}. Har pasienten vært stabil over tid, vurder å forlenge intervallet.`};
+    }
+
+    const min = +v.min || 0, n = n501(min);
+    const text = join([...head,
+      flTxt && `Depurert subgingivalt: ${flTxt}.`,
+      v.supra && fl.length && 'Øvrige flater: supragingival rens.',
+      L('Depurasjon', v.depx),
+      ...egen, v.puss && 'Puss m/pasta.',
+      min && `Aktiv behandlingstid: ${min} min`, ...tail]);
+    chk501(v, n, w);
+    if (!v.funn) w.push(['warn', 'Velg funn: lommer som trenger depurasjon, eller ingen behandlingskrevende lommer.']);
+    if (!fl.length) w.push(['err', '501 krever subgingival depurasjon – før opp flatene som er depurert.']);
+    else if (fl.some(r => !t(r.ppd))) w.push(['warn', 'Før opp PPD for alle depurerte flater – det viser at behandlingen er målrettet.']);
+    const grunn = fl.filter(r => t(r.ppd) && (+r.ppd <= 3 || (+r.ppd === 4 && r.bop !== '+')));
+    if (grunn.length) w.push(['warn', `${grunn.map(site).join(', ')}: grunne flater uten blødning bør ikke depureres subgingivalt (risiko for festetap). Begrunn hvis de likevel er behandlet.`]);
+    const aktiv = fl.some(r => +r.ppd >= 5 || (+r.ppd === 4 && r.bop === '+'));
+    if (aktiv && (v.status === 'Stabil' || v.status === 'I remisjon')) w.push(['warn', 'Lommer ≥ 5 mm eller 4 mm med BoP tilsvarer sykdomsstatus «ustabil» (AAP/EFP 2018).']);
     return {entries:[{t:'501', text}, ...repeats(n, min)], w, next:`Ny vedlikeholdstime om ${v.ny || '3–6 mnd'} (501).`};
   },
 },
@@ -623,9 +665,14 @@ function fieldHTML(f, v) {
       `<label><input type="radio" name="${f.k}" data-k="${f.k}" value="${esc(k)}"${k === val ? ' checked' : ''}><span>${esc(l)}</span></label>`).join('')}</div></div>`;
     case 'multi': return `<div class="fld"><span>${esc(f.label)}</span><div class="seg">${f.opts.map(o =>
       `<label><input type="checkbox" data-k="${f.k}" data-multi value="${esc(o)}"${val.includes(o) ? ' checked' : ''}><span>${esc(o)}</span></label>`).join('')}</div></div>`;
-    case 'rows': return `<div class="rows">${val.map((r, i) => `<div class="row"><span class="num">${i + 1}</span>${f.cols.map(([c, p]) =>
-      `<input type="text" data-k="${f.k}" data-i="${i}" data-c="${c}" value="${esc(r[c])}" placeholder="${esc(p)}" aria-label="${esc(p)} ${i + 1}">`).join('')}<button type="button" class="btn icon" data-del="${f.k}" data-i="${i}" aria-label="Fjern rad ${i + 1}">✕</button></div>`).join('')}
+    case 'rows': {
+      const gc = `style="grid-template-columns:28px repeat(${f.cols.length},minmax(0,1fr)) 34px"`;
+      const cell = ([c, p, o = {}], r, i) => o.opts
+        ? `<select data-k="${f.k}" data-i="${i}" data-c="${c}" aria-label="${esc(p)} ${i + 1}">${o.opts.map(x => `<option value="${esc(x)}"${x === r[c] ? ' selected' : ''}>${x ? esc(x) : '–'}</option>`).join('')}</select>`
+        : `<input type="text"${o.im ? ` inputmode="${o.im}"` : ''} data-k="${f.k}" data-i="${i}" data-c="${c}" value="${esc(r[c])}" placeholder="${esc(p)}" aria-label="${esc(p)} ${i + 1}">`;
+      return `<div class="fld rows">${f.label ? `<span>${esc(f.label)}</span>` : ''}<div class="row head" ${gc}><span></span>${f.cols.map(([, p]) => `<span>${esc(p)}</span>`).join('')}<span></span></div>${val.map((r, i) => `<div class="row" ${gc}><span class="num">${i + 1}</span>${f.cols.map(col => cell(col, r, i)).join('')}<button type="button" class="btn icon" data-del="${f.k}" data-i="${i}" aria-label="Fjern rad ${i + 1}">✕</button></div>`).join('')}
       <button type="button" class="btn ghost" data-add="${f.k}">+ Legg til rad</button></div>`;
+    }
   }
   return '';
 }
@@ -657,7 +704,7 @@ function renderOut() {
     <h2>Journaltekst</h2>
     <div class="sum"><span class="tk">${esc(tk)}</span><button type="button" class="btn primary" data-copy="all">Kopier alt</button></div>
     <ul class="msgs">${msgs.map(([l, m]) => `<li class="${l}">${l === 'err' ? '✕ ' : l === 'warn' ? '! ' : ''}${esc(m)}</li>`).join('')}${okMsg}</ul>
-    ${last.entries.map((e, i) => `<div class="entry"><header><b>${cur.id === 'rb' ? '6b – plan' : 'Takst ' + esc(e.t)}</b><button type="button" class="btn" data-copy="${i}">Kopier</button></header><pre>${esc(e.text)}</pre></div>`).join('')}`;
+    ${last.entries.map((e, i) => `<div class="entry"><header><b>${cur.id === 'rb' ? '6b – plan' : /^\d/.test(e.t) ? 'Takst ' + esc(e.t) : esc(e.t)}</b><button type="button" class="btn" data-copy="${i}">Kopier</button></header><pre>${esc(e.text)}</pre></div>`).join('')}`;
   $('#next').innerHTML = `<b>Neste:</b> ${esc(last.next || '')}`;
   $('#barTk').textContent = tk + (errs ? ` · ${errs} ⚠` : ' · ✓');
   const h = document.getElementById('hint_min');
@@ -708,7 +755,7 @@ async function copyText(text, btn) {
   if (btn) { const o = btn.textContent; btn.textContent = 'Kopiert ✓'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = o; btn.classList.remove('copied'); }, 1400); }
 }
 const allText = () => last.entries.length === 1 ? last.entries[0].text
-  : last.entries.map(e => `Takst ${e.t}\n${e.text}`).join('\n\n');
+  : last.entries.map(e => `${/^\d/.test(e.t) ? 'Takst ' : ''}${e.t}\n${e.text}`).join('\n\n');
 $('#out').addEventListener('click', e => {
   const b = e.target.closest('[data-copy]'); if (!b) return;
   copyText(b.dataset.copy === 'all' ? allText() : last.entries[+b.dataset.copy].text, b);
