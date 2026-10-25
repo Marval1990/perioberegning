@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Perio-journal · HELFO 6a/6b</title>
+<meta name="description" content="Steg-for-steg journalføring av periodontittbehandling etter HELFO stønadspunkt 6a og 6b. Kryss av, fyll inn og kopier ferdig journaltekst. Ingen data lagres eller sendes.">
+<meta name="theme-color" content="#1E6E5B">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E6E5B'/%3E%3Cpath d='M32 12c-7 0-9 3-13 3-3.5 0-6 2.5-6 7 0 7 3 10 4.5 17.5C19 47 20 52 23 52c3.2 0 3.4-8 9-8s5.8 8 9 8c3 0 4-5 5.5-12.5C48 32 51 29 51 22c0-4.5-2.5-7-6-7-4 0-6-3-13-3z' fill='%23FFFFFF'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%231E6E5B'/%3E%3Cpath d='M32 12c-7 0-9 3-13 3-3.5 0-6 2.5-6 7 0 7 3 10 4.5 17.5C19 47 20 52 23 52c3.2 0 3.4-8 9-8s5.8 8 9 8c3 0 4-5 5.5-12.5C48 32 51 29 51 22c0-4.5-2.5-7-6-7-4 0-6-3-13-3z' fill='%23FFFFFF'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#F4F7F5;--surface:#FFFFFF;--surface-2:#FAFCFB;--ink:#16201C;--ink-soft:#3D4843;--muted:#5A635C;
+  --line:#E4EAE6;--line-strong:#CBD4CE;--accent:#1E6E5B;--accent-soft:#E6F0EC;--accent-ink:#124A3D;
+  --ok:#2F7355;--ok-bg:#E8F2EC;--warn:#8A5E10;--warn-bg:#F8EFD9;--err:#8A3A1C;--err-bg:#F7E7DE;
+  --radius:14px;--radius-sm:9px;
+  --font-ui:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-display:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --font-mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:84px}
+@media(min-width:960px){body{padding-bottom:0}}
+header.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.top .wrap{padding-top:18px;padding-bottom:14px}
+h1{font-family:var(--font-display);font-weight:600;font-size:1.6rem;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:.2rem 0 0;font-size:.95rem}
+
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:8px;padding-bottom:8px;scrollbar-width:none}
+nav.tabs .wrap::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-soft);border-radius:999px;padding:6px 13px;font:inherit;font-size:.9rem;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
+.tab small{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tab[aria-selected=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab[aria-selected=true] small{color:#D3E7DF}
+
+.intro{margin:18px 0 14px;display:grid;gap:12px}
+@media(min-width:960px){.intro{grid-template-columns:1.1fr 1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.intro h2{font-family:var(--font-display);font-weight:600;font-size:1.3rem;margin:0 0 4px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent-ink);border-radius:6px;padding:1px 8px;font-size:.82rem;font-weight:600}
+.intro p{margin:.5rem 0 0;color:var(--ink-soft)}
+.next{margin-top:10px;padding:9px 12px;border-radius:var(--radius-sm);background:var(--surface-2);border:1px dashed var(--line-strong);font-size:.92rem}
+.next b{color:var(--accent-ink)}
+.helfo h3{margin:0 0 6px;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--accent-ink)}
+.helfo ul{margin:0;padding-left:18px;font-size:.92rem;color:var(--ink-soft)}
+.helfo li+li{margin-top:4px}
+
+.grid{display:grid;gap:14px;align-items:start}
+@media(min-width:960px){.grid{grid-template-columns:1fr 1fr}#out{position:sticky;top:72px;max-height:calc(100vh - 88px);overflow:auto}}
+form.card{padding:6px 16px 16px}
+h3.sec{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:18px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+h3.sec:first-child{border-top:0;padding-top:4px}
+.fld{display:block;margin:0 0 10px}
+.fld>span{display:block;font-size:.88rem;font-weight:600;color:var(--ink-soft);margin-bottom:3px}
+.fld .hint{font-weight:400;color:var(--muted)}
+input[type=text],input[type=number],textarea,select{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);padding:8px 10px}
+textarea{min-height:64px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);background:#fff}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:7px 0;cursor:pointer;font-size:.95rem}
+.chk input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--accent);flex:0 0 auto}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{cursor:pointer}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:inline-block;border:1px solid var(--line-strong);border-radius:999px;padding:5px 12px;font-size:.9rem;background:var(--surface-2);font-weight:500;color:var(--ink-soft)}
+.seg input:checked+span{background:var(--accent);border-color:var(--accent);color:#fff}
+.seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rows .row{display:grid;grid-template-columns:28px 1fr 1fr 34px;gap:6px;align-items:center;margin-bottom:6px}
+.rows .num{color:var(--muted);font-weight:600;text-align:center}
+.btn{font:inherit;font-size:.9rem;border-radius:var(--radius-sm);border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);padding:7px 12px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.btn.ghost{border-color:transparent;color:var(--muted);padding:4px 8px}
+.btn.icon{padding:4px 0;width:34px;color:var(--muted)}
+.formfoot{display:flex;justify-content:flex-end;margin-top:12px}
+
+#out h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 8px}
+.sum{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.sum .tk{font-family:var(--font-mono);font-size:1rem;font-weight:600}
+.msgs{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:6px}
+.msgs li{padding:7px 10px;border-radius:var(--radius-sm);font-size:.88rem}
+.msgs .err{background:var(--err-bg);color:var(--err)}
+.msgs .warn{background:var(--warn-bg);color:var(--warn)}
+.msgs .info{background:var(--accent-soft);color:var(--accent-ink)}
+.msgs .ok{background:var(--ok-bg);color:var(--ok)}
+.entry{border:1px solid var(--line);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden}
+.entry header{display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);border-bottom:1px solid var(--line);padding:5px 6px 5px 10px}
+.entry header b{font-family:var(--font-mono);font-size:.92rem}
+.entry pre{margin:0;padding:10px 12px;font-family:var(--font-ui);font-size:.92rem;white-space:pre-wrap;word-break:break-word}
+.copied{background:var(--ok)!important;border-color:var(--ok)!important;color:#fff!important}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;align-items:center}
+.bar .tk{flex:1;font-family:var(--font-mono);font-weight:600;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(min-width:960px){.bar{display:none}}
+
+details.ref{margin-top:14px}
+details.ref summary{cursor:pointer;font-weight:600}
+details.ref h4{margin:14px 0 4px;font-size:.95rem}
+details.ref ul,details.ref ol{margin:0;padding-left:20px;color:var(--ink-soft);font-size:.92rem}
+details.ref li+li{margin-top:3px}
+footer{color:var(--muted);font-size:.82rem;padding:22px 0 30px}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <h1>Perio-journal</h1>
+  <p class="sub">Journalføring etter HELFO stønadspunkt 6a og 6b — velg timen, kryss av, kopier teksten inn i Opus.</p>
+</div></header>
+
+<nav class="tabs" aria-label="Velg time"><div class="wrap" id="tabs" role="tablist"></div></nav>
+
+<main class="wrap">
+  <section class="intro" id="intro"></section>
+  <div class="grid">
+    <form class="card" id="form" autocomplete="off" onsubmit="return false"></form>
+    <aside class="card" id="out" aria-live="polite"></aside>
+  </div>
+
+  <details class="ref card">
+    <summary>Stønadspunkt 6 — regelverket kort</summary>
+    <h4>a) Behandling av marginal periodontitt og periimplantitt</h4>
+    <ul>
+      <li>Ikke stønad til forebyggende tiltak som rutinemessig tannrens, eller til behandling av gingivitt.</li>
+      <li>Stønad ved <b>systematisk</b> behandling med mål om <b>infeksjonskontroll</b>. Behandlingen må være <b>målrettet</b>, <b>faglig strukturert</b> og fremgå av en journalført behandlingsplan.</li>
+      <li>Behandlingsplanen må gjennomføres fortløpende, omfatte hele tannsettet, inneholde en prognosevurdering og være basert på vitenskapelig dokumenterte rutiner og prosedyrer.</li>
+      <li>Takst 1: én gang per kalenderår per pasient, uavhengig av behandler. Ved henvisning fra allmenntannlege/tannpleier kan én spesialist i periodonti i tillegg bruke takst 2 én gang per kalenderår.</li>
+      <li>501 skal inneholde: opplæring i egenomsorg (sammen med subgingival depurasjon), subgingival depurasjon og ev. tiltak for røykeavvenning.</li>
+      <li>501: minst 30 min aktiv behandlingstid. 30–59 min: én gang. Fra 60 min i samme seanse: én gang per 30. minutt.</li>
+      <li>501: inntil 14 ganger per kalenderår per pasient, uavhengig av behandler — også når 501 brukes sammen med 502.</li>
+      <li>Utgiftene dekkes etter 501–505. Takster i takstgruppe A, H og I kan brukes i tillegg.</li>
+      <li>503 kan brukes ved oppbygging med vevsregenererende materiale eller bentransplantasjon ved bentap pga. periodontitt eller periimplantitt. 503 og 504 kun for spesialister i periodonti, oral kirurgi og oral medisin og maxillofacial kirurgi.</li>
+      <li>Godkjente egenandeler inngår i frikort for helsetjenester.</li>
+    </ul>
+    <h4>b) Rehabilitering ved tanntap som følge av grav marginal periodontitt</h4>
+    <ul>
+      <li>Årsaken til tanntapet må dokumenteres.</li>
+      <li>Før start: individuelt tilpasset behandlingsplan og plan for oppfølging. Har en annen tannlege ansvar for oppfølgingen, må denne utarbeide oppfølgingsplanen. Planene journalføres.</li>
+      <li>Journalen skal beskrive hvorfor tannen trekkes og ikke behandles for marginal periodontitt.</li>
+      <li>Munnhulen må være sanert for oralpatologiske tilstander før rehabiliteringen starter.</li>
+      <li>Hovedregel: ikke stønad for tenner bakenfor premolar / 5. tann. Nødvendig unntak begrunnes og dokumenteres.</li>
+      <li>Én rehabilitering per tapt tann. Unntak: protetikk (også implantat) må fjernes/gjøres om fordi flere tenner må trekkes pga. periodontitt — da stønad til hel-/delprotese. Fast protetikk: kun for tenner det ikke tidligere er gitt stønad for.</li>
+      <li>Takst 509–517 dekker alle kliniske prosedyrer (anestesi, røntgen, tannteknikk). Takst 1–5 for nødvendig undersøkelse og etterkontroll.</li>
+      <li>509–511: dokumenter om protesen er midlertidig eller permanent. Beholdes midlertidig protese (509) permanent, gis ikke ny stønad etter 510/511.</li>
+      <li>Regenerasjon: 503 og 504 sammen med 514. Takst 401/402 kan brukes med 514 når tapte tenner skal erstattes med implantat. 809/810 kun for spesialist i kjeve- og ansiktsradiologi.</li>
+      <li>Ikke stønad for kirurgisk behandling etter 421–423 under 6b.</li>
+    </ul>
+  </details>
+
+  <details class="ref card">
+    <summary>Oppsett i Opus</summary>
+    <ol>
+      <li>Registrer tannstatus / manglende tenner <b>før</b> du åpner perio-skjemaet.</li>
+      <li>Ny journalregistrering → Registreringsbilde → Valg/oppsett.</li>
+      <li>Registrer: <b>Blødning</b>, <b>Mob</b>, <b>Inv</b> og <b>Puss</b>. Plakk/blødning: <b>Visuell blødning</b>. Inv: <b>Fullstendig furk</b>.</li>
+      <li>Registrer flate: <b>6-kanters</b>. Målerekkefølge: <b>PeriProbe</b>.</li>
+      <li>Rekkefølge: 1) overkjeve bukkalt 18→28, 2) overkjeve palatinalt 28→18, 3) underkjeve lingualt 48→38, 4) underkjeve bukkalt 38→48. BoP registreres etter hver sekstant.</li>
+      <li>Tips: lagre tekstene herfra som <i>Forhåndslagrede journaltekster</i> per takst.</li>
+    </ol>
+  </details>
+
+  <footer>
+    Bygget på foredrag om journalføring etter HELFO 6a og Helsedirektoratets rundskriv til stønadspunkt 6 (siste faglige endring 01.01.2023). Kontroller alltid mot gjeldende regelverk.
+    Ingen pasientdata lagres eller sendes — alt skjer i nettleseren.
+  </footer>
+</main>
+
+<div class="bar"><span class="tk" id="barTk"></span><button class="btn" type="button" id="barJump">Tekst ↓</button><button class="btn primary" type="button" id="barCopy">Kopier alt</button></div>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const t = s => String(s ?? '').trim();
+const L = (label, val) => t(val) ? `${label}: ${t(val)}` : null;
+const n501 = min => min >= 30 ? Math.floor(min / 30) : 0;
+const molars = s => t(s).match(/\b[1-4][6-8]\b/g) || [];
+
+// ---------- felles felt ----------
+const TOB = [
+  {k:'tob', t:'select', label:'Tobakk', opts:['','Ikke-røyker','Røyker','Snuser','Sluttet','Redusert','Uendret']},
+  {k:'tobd', t:'text', label:'Tobakk – detaljer', ph:'f.eks. 15–20/d siden 25 år, motivert for å slutte'},
+];
+const tobLine = v => { const s = [t(v.tob), t(v.tobd)].filter(Boolean).join(' – '); return s ? `Tobakk: ${s}` : null; };
+const TIME = (show) => [
+  {sec:'Tid og takstgrense', show},
+  {k:'min', t:'number', label:'Aktiv behandlingstid (min)', def:60, hint:true, show},
+  {k:'brukt', t:'number', label:'501 brukt tidligere i år (alle behandlere)', ph:'0', show},
+];
+const ANEST = [
+  {k:'anest', t:'check', label:'Anestesi (takst 6)', def:true},
+  {k:'anestd', t:'text', label:'Anestesi – detaljer', ph:'f.eks. Xylocain-adrenalin 20 mg/ml + 12,5 µg/ml, 2 × 1,8 ml', show:v=>v.anest},
+];
+
+function chk501(v, n, w) {
+  const brukt = +v.brukt || 0;
+  if (!n) w.push(['err', 'Under 30 min aktiv behandlingstid – takst 501 kan ikke brukes.']);
+  if (brukt + n > 14) w.push(['err', `Grensen på 14 × 501 per kalenderår overskrides (${brukt} + ${n}).`]);
+  else if (n && brukt) w.push(['info', `Etter denne timen: ${brukt + n} av 14 × 501 brukt i år.`]);
+}
+function repeats(n, min) {
+  const out = [];
+  for (let i = 2; i <= n; i++) out.push({t:'501', text: n === 2
+    ? 'Behandling av marginal periodontitt\nDobbelt seanse samme dag (repetert takst)'
+    : `Behandling av marginal periodontitt\nRepetert takst (${i} av ${n}) – samme seanse, aktiv behandlingstid ${min} min`});
+  return out;
+}
+const join = a => a.filter(Boolean).join('\n');
+
+// ---------- timene ----------
+const M = [
+{
+  id:'f1', phase:'Fase 1', tab:'Undersøkelse', title:'Undersøkelse, utredning og behandlingsplan', takst:'Takst 1 (2 eller 3)',
+  intro:'Journalopptak, periodontale mål, diagnose, prognose og en tentativ behandlingsplan for hele tannsettet.',
+  helfo:[
+    'Takst 1 kan brukes én gang per kalenderår per pasient, uavhengig av behandler. Spesialist i periodonti kan i tillegg bruke takst 2 én gang per år ved henvisning.',
+    'Behandlingen må være systematisk, målrettet og faglig strukturert, med mål om infeksjonskontroll.',
+    'Behandlingsplanen skal journalføres, gjennomføres fortløpende, omfatte hele tannsettet og inneholde en prognosevurdering.',
+    'Ikke stønad til rutinemessig tannrens eller behandling av gingivitt.',
+  ],
+  fields:[
+    {sec:'Takst'},
+    {k:'takst', t:'radio', label:'Takst', opts:[['1','1'],['2','2 – spesialist, henvist'],['3','3']], def:'1'},
+    {k:'aar', t:'check', label:'Takst 1/2 er ikke brukt for periodontitt tidligere i år (sjekket)', def:false},
+    {sec:'Undersøkelse'},
+    {k:'maal', t:'check', label:'Ført periodontale mål – mobilitet, furkasjoner, PPD, BoP', def:true},
+    {k:'rtg', t:'text', label:'Røntgen', ph:'f.eks. Røntgenstatus / bitewing + periapikale'},
+    {k:'diag', t:'text', label:'Diagnose', ph:'f.eks. Periodontitt stadium III, grad B, generalisert'},
+    {k:'info', t:'check', label:'Informert om periodontitt – forklart sammenheng mellom periodontal sykdom, tobakk, plakk og generell helse', def:true},
+    {sec:'Prognostiske faktorer'},
+    ...TOB,
+    {k:'diab', t:'select', label:'Diabetes', opts:['','Nei','Ja – kontrollert','Ja – ukontrollert']},
+    {k:'diabd', t:'text', label:'Diabetes – detaljer', ph:'f.eks. tidligere ukontrollert (14 år siden), nå kontrollert', show:v=>v.diab && v.diab !== 'Nei'},
+    {k:'arv', t:'check', label:'Periodontitt i familien – genetisk disposisjon kan ikke utelukkes'},
+    {k:'ben', t:'check', label:'Omfattende bennedbrytning i forhold til alder'},
+    {k:'ftb', t:'check', label:'Ikke tidligere periodontal behandling'},
+    {k:'pfa', t:'text', label:'Andre faktorer', ph:'f.eks. medisiner, stress, lite erfaring med tannbehandling'},
+    {sec:'Funn og instruksjon'},
+    {k:'plakk', t:'text', label:'Plakk', ph:'f.eks. Molarregionen approksimalt. Ødem og blødning regio 32–33'},
+    {k:'instr', t:'text', label:'Instruert', ph:'f.eks. Interdentalbørster grønn (0,9 mm), teknikk for å nå ut til sidene'},
+    {k:'sens', t:'text', label:'Senstest', ph:'f.eks. Positiv 17–26, 37–47 (8-ere ikke testet)'},
+    {sec:'Prognose per tann'},
+    {k:'tapt', t:'text', label:'Ansees tapt', ph:'f.eks. 18, 27, 28, 38, 48'},
+    {k:'darlig', t:'text', label:'Dårlig prognose', ph:'f.eks. 17, 16, 14'},
+    {k:'usikker', t:'text', label:'Usikker prognose', ph:'f.eks. 37, 36, 41'},
+    {k:'fakt', t:'area', label:'Faktorer som påvirker behandlingsplan', ph:'f.eks. Smerter v. side – ekstraksjoner 2. kv. i fase 1. Hensyn til diabetes (tidsforløp, måltider).'},
+    {sec:'Behandlingsplan'},
+    {k:'plan', t:'rows', cols:[['what','Behandling'],['ex','Ekstraksjon (tann)']], def:[
+      {what:'Depurasjon 1. kv.', ex:''},{what:'Depurasjon 4. kv.', ex:''},{what:'Depurasjon 2. kv.', ex:''},{what:'Depurasjon 3. kv.', ex:''}]},
+    {k:'reev', t:'check', label:'Deretter reevaluering – vurdere kirurgi og ev. ytterligere ekstraksjoner', def:true},
+    {k:'hel', t:'check', label:'Planen omfatter hele tannsettet og har som mål å oppnå infeksjonskontroll', def:true},
+    {k:'samt', t:'check', label:'Pasienten samtykker til planlagt behandling'},
+  ],
+  build(v) {
+    const w = [], pf = [];
+    const tob = [t(v.tob), t(v.tobd)].filter(Boolean).join(' – ');
+    if (tob) pf.push('Tobakk: ' + tob);
+    if (v.diab) pf.push('Diabetes: ' + [v.diab, v.diab !== 'Nei' ? t(v.diabd) : ''].filter(Boolean).join(' – '));
+    if (v.arv) pf.push('Periodontitt i familien – genetisk disposisjon kan ikke utelukkes');
+    if (v.ben) pf.push('Omfattende bennedbrytning i forhold til alder');
+    if (v.ftb) pf.push('Ikke tidligere periodontal behandling');
+    if (t(v.pfa)) pf.push(t(v.pfa));
+    const plan = (v.plan || []).filter(r => t(r.what) || t(r.ex));
+    const text = join([
+      'Undersøkelse/utredning – periodontitt.',
+      v.maal && 'Ført periodontale mål – mobilitet, furkasjoner, PPD, BoP.',
+      L('Røntgen', v.rtg), L('Diagnose', v.diag),
+      v.info && 'Informert om periodontitt. Forklart sammenheng mellom periodontal sykdom, tobakk, plakk og generell helse.',
+      pf.length && 'Prognostiske faktorer:\n' + pf.map(p => '- ' + p).join('\n'),
+      L('Plakk', v.plakk), L('Instruert', v.instr), L('Senstest', v.sens),
+      L('Ansees tapt', v.tapt), L('Dårlig prognose', v.darlig), L('Usikker prognose', v.usikker),
+      L('Faktorer som påvirker behandlingsplan', v.fakt),
+      plan.length && 'Behandlingsplan:\n' + plan.map((r, i) => `${i + 1} – ${[t(r.what), t(r.ex) && 'ex ' + t(r.ex)].filter(Boolean).join(', ')}`).join('\n'),
+      v.reev && 'Deretter reevaluering – vurdere kirurgi og ev. ytterligere ekstraksjoner.',
+      v.hel && 'Behandlingen er systematisk, omfatter hele tannsettet og har som mål å oppnå infeksjonskontroll.',
+      v.samt && 'Pasienten samtykker til planlagt behandling.',
+    ]);
+    if (!v.maal) w.push(['err', 'Periodontale mål (PPD, BoP, mobilitet, furkasjoner) må registreres.']);
+    if (!pf.length && !t(v.tapt) && !t(v.darlig) && !t(v.usikker)) w.push(['err', 'Prognosevurdering mangler – fyll inn prognostiske faktorer og/eller prognose per tann.']);
+    if (!plan.length) w.push(['err', 'Behandlingsplan mangler.']);
+    if (!v.hel) w.push(['warn', 'Behandlingsplanen må omfatte hele tannsettet.']);
+    if (!t(v.diag)) w.push(['warn', 'Diagnose er ikke fylt inn.']);
+    if (!v.aar) w.push(['warn', `Sjekk at takst ${v.takst === '2' ? '2' : '1'} ikke er brukt tidligere i år (gjelder uavhengig av behandler).`]);
+    if (v.takst === '2') w.push(['info', 'Takst 2: kun spesialist i periodonti, ved henvisning fra allmenntannlege/tannpleier.']);
+    if (!v.samt) w.push(['warn', 'Samtykke til behandlingsplanen er ikke dokumentert.']);
+    const n = plan.length || 4;
+    return {entries:[{t:v.takst, text}], w,
+      next:`Sett opp ${n} depurasjonstime${n > 1 ? 'r' : ''} à ca. 60 min (6 + 501 + 501) med ca. 1 ukes mellomrom. Planen skal gjennomføres fortløpende.`};
+  },
+},
+{
+  id:'f2', phase:'Fase 2', tab:'Depurasjon', title:'Subgingival depurasjon', takst:'Takst 6 + 501 × n',
+  intro:'Én seanse per kvadrant/område med korte intervaller (ca. 1 uke). Hver 501 må dokumentere depurasjon og opplæring i egenomsorg.',
+  helfo:[
+    '501 krever minst 30 min aktiv behandlingstid: 30–59 min = 1 ×, deretter 1 × per 30. minutt i samme seanse.',
+    '501 skal inneholde subgingival depurasjon, opplæring i egenomsorg og ev. tiltak for røykeavvenning.',
+    'Maks 14 × 501 per kalenderår per pasient, uavhengig av behandler.',
+    'Takster i takstgruppe A, H og I kan brukes i tillegg.',
+  ],
+  fields:[
+    {sec:'Seanse'},
+    {k:'seanse', t:'select', label:'Seanse nr.', opts:['1','2','3','4','5','6'], def:'1', half:1},
+    {k:'av', t:'select', label:'av totalt', opts:['1','2','3','4','5','6'], def:'4', half:2},
+    {k:'kv', t:'multi', label:'Depurert', opts:['1. kv.','2. kv.','3. kv.','4. kv.','Front OK','Front UK']},
+    {k:'depd', t:'text', label:'Depurasjon – detaljer', ph:'f.eks. subgingivalt, alle lommer ≥ 4 mm'},
+    ...ANEST,
+    {k:'ex', t:'text', label:'Ekstrahert (registreres med egen takst)', ph:'f.eks. 18'},
+    {sec:'Egenomsorg'},
+    {k:'forb', t:'text', label:'Forbedringspotensiale', ph:'f.eks. plakk approksimalt 16–14'},
+    {k:'hjelp', t:'text', label:'Instruert hjelpemiddel', ph:'f.eks. Interdentalbørste grønn (0,9 mm)'},
+    {k:'royk', t:'check', label:'Tiltak for røykeavvenning gjennomført'},
+    {k:'roykd', t:'text', label:'Røykeavvenning – hva', ph:'f.eks. motivasjonssamtale, info om røykeslutt-tilbud', show:v=>v.royk},
+    ...TIME(),
+  ],
+  build(v) {
+    const w = [], min = +v.min || 0, n = n501(min), e = [];
+    const omr = [(v.kv || []).join(', '), t(v.depd)].filter(Boolean).join(' – ');
+    if (v.anest) e.push({t:'6', text: 'Lokal/regional anestesi' + (t(v.anestd) ? '\n' + t(v.anestd) : '')});
+    e.push({t:'501', text: join([
+      `Behandling av marginal periodontitt – seanse ${v.seanse} av ${v.av}`,
+      L('Depurert', omr),
+      L('Forbedringspotensiale', v.forb),
+      L('Instruert hjelpemiddel', v.hjelp),
+      v.royk && 'Røykeavvenning: ' + (t(v.roykd) || 'tiltak gjennomført'),
+      L('Ekstrahert', v.ex),
+      min && `Aktiv behandlingstid: ${min} min`,
+    ])});
+    e.push(...repeats(n, min));
+    chk501(v, n, w);
+    if (!omr) w.push(['err', 'Dokumenter hva som er depurert (subgingival depurasjon er et krav for 501).']);
+    if (!t(v.hjelp)) w.push(['warn', '501 skal inkludere opplæring i egenomsorg – fyll inn instruert hjelpemiddel.']);
+    const s = +v.seanse, av = +v.av;
+    return {entries:e, w, next: s < av
+      ? `Seanse ${s + 1} av ${av} om ca. 1 uke.`
+      : 'Siste depurasjon. Sett opp reevaluering etter tilheling (vanligvis 6–12 uker) – takst 4 eller 501.'};
+  },
+},
+{
+  id:'re', phase:'Fase 2', tab:'Reevaluering', title:'Reevaluering etter depurasjon', takst:'Takst 4 eller 501',
+  intro:'Kontroll etter subgingival depurasjon. Sammenlign PPD og BoP med baseline og legg plan for videre behandling.',
+  helfo:[
+    'Bruk takst 4 ved kontroll uten behandling; 501 forutsetter subgingival depurasjon og minst 30 min.',
+    'Dokumenter respons i forhold til baseline og ev. endret prognose.',
+    'Ny/justert behandlingsplan og pasientens samtykke skal journalføres.',
+  ],
+  fields:[
+    {sec:'Takst'},
+    {k:'takst', t:'radio', label:'Takst', opts:[['4','4'],['501','501']], def:'4'},
+    {sec:'Kontroll'},
+    {k:'vurd', t:'check', label:'Vurdert PPD + BoP i forhold til baseline', def:true},
+    {k:'dep', t:'text', label:'Depurert', ph:'f.eks. Selektivt – spesielt 14, lingualt UK og incisiver OK'},
+    {k:'plakk', t:'text', label:'Plakk', ph:'f.eks. Noe ny calculus lingualt UK'},
+    {k:'instr', t:'text', label:'Instruert', ph:'f.eks. Børsteteknikk lingualt UK'},
+    ...TOB,
+    {k:'prog', t:'area', label:'Respons / endring av prognose', ph:'f.eks. God respons – betydelig reduksjon av PPD, ingen PPD > 5 mm 12–22, men gjenværende lommer m/BoP'},
+    {k:'tapt', t:'text', label:'Tapt', ph:'f.eks. 14'},
+    {sec:'Videre behandling'},
+    {k:'videre', t:'radio', label:'Behov for ytterligere behandling', opts:[['kir','Kirurgi'],['redep','Ny depurasjon'],['vedl','Over i vedlikehold'],['henv','Henvise spesialist']]},
+    {k:'kir', t:'rows', cols:[['what','Område/tenner'],['note','Merknad']], def:[{what:'',note:''}], show:v=>v.videre === 'kir' || v.videre === 'redep'},
+    {k:'vint', t:'select', label:'Vedlikeholdsintervall', opts:['','3 mnd','4 mnd','6 mnd'], show:v=>v.videre === 'vedl'},
+    {k:'begr', t:'area', label:'Begrunnelse for planen', ph:'f.eks. Korte inngrep pga. diabetes. Kirurgien deles opp pga. bennedbrytning og furkasjonsinvolvering.'},
+    {k:'samt', t:'check', label:'Pasienten samtykker til behandlingsplanen'},
+    ...TIME(v => v.takst === '501'),
+  ],
+  build(v) {
+    const w = [], is501 = v.takst === '501', min = +v.min || 0, n = is501 ? n501(min) : 0;
+    const rows = (v.kir || []).filter(r => t(r.what));
+    const lbl = v.videre === 'kir' ? 'Kirurgi' : 'Depurasjon';
+    const videre = {
+      kir:'Behov for ytterligere behandling: kirurgi',
+      redep:'Behov for ytterligere behandling: ny depurasjon av gjenværende lommer',
+      vedl:`Behov for ytterligere behandling: nei – over i vedlikeholdsfase${v.vint ? ', intervall ' + v.vint : ''}`,
+      henv:'Behov for ytterligere behandling: henvises spesialist i periodonti',
+    }[v.videre];
+    const showRows = v.videre === 'kir' || v.videre === 'redep';
+    const text = join([
+      'Perioplan: Kontroll etter subgingival depurasjon.' + (v.vurd ? ' Vurdert PPD + BoP i forhold til baseline.' : ''),
+      L('Depurert', v.dep), L('Plakk', v.plakk), L('Instruert', v.instr), tobLine(v),
+      L('Endring av prognose', v.prog), L('Tapt', v.tapt),
+      videre, showRows && rows.length && rows.map((r, i) => `${i + 1}. ${lbl} ${t(r.what)}${t(r.note) ? ' – ' + t(r.note) : ''}`).join('\n'),
+      L('Begrunnelse', v.begr),
+      is501 && min && `Aktiv behandlingstid: ${min} min`,
+      v.samt && 'Pasienten samtykker til behandlingsplanen.',
+    ]);
+    const e = [{t:v.takst, text}];
+    if (is501) { e.push(...repeats(n, min)); chk501(v, n, w);
+      if (!t(v.dep)) w.push(['err', '501 forutsetter subgingival depurasjon – fyll inn «Depurert», eller bruk takst 4.']); }
+    if (!v.vurd) w.push(['warn', 'Dokumenter vurdering av PPD og BoP mot baseline.']);
+    if (!videre) w.push(['warn', 'Velg videre behandling.']);
+    if (showRows && !rows.length) w.push(['warn', 'Angi områder for videre behandling.']);
+    if (!v.samt) w.push(['warn', 'Samtykke er ikke dokumentert.']);
+    const next = {
+      kir:'Sett opp kirurgi – én time per område (6 + 501 × n + 502). Korte økter ved f.eks. diabetes.',
+      redep:'Sett opp ny depurasjon av gjenværende lommer (6 + 501).',
+      vedl:`Sett opp vedlikehold om ${v.vint || '3–6 mnd'} (501).`,
+      henv:'Send henvisning til spesialist i periodonti.',
+    }[v.videre] || 'Velg videre behandling for å få forslag til neste time.';
+    return {entries:e, w, next};
+  },
+},
+{
+  id:'ki', phase:'Fase 2', tab:'Kirurgi', title:'Periodontal kirurgi', takst:'Takst 6 + 501 × n + 502',
+  intro:'501 dokumenterer tiden («se kirurgi»), 502 dokumenterer selve inngrepet.',
+  helfo:[
+    'Kirurgi: 501 (etter tid) + 502 tillegg for kirurgisk inngrep.',
+    'Grensen på 14 × 501 per kalenderår gjelder også når 501 brukes sammen med 502.',
+    '503 (regenerativt materiale/bentransplantasjon) og 504 kan bare brukes av spesialister i periodonti, oral kirurgi og oral medisin og maxillofacial kirurgi.',
+  ],
+  fields:[
+    {sec:'Inngrep (502)'},
+    {k:'reg', t:'text', label:'Tenner', ph:'f.eks. 17–16'},
+    {k:'snitt', t:'text', label:'Snitt', ph:'f.eks. Randsnitt 15d–17, distal wedge'},
+    {k:'vask', t:'text', label:'Vask/irrigasjon', def:'fys. saltvann'},
+    {k:'sar', t:'text', label:'Sårtoilette', def:'ok'},
+    {k:'sut', t:'text', label:'Suturer', ph:'f.eks. 3 Vicryl'},
+    {k:'med', t:'text', label:'Medikamenter', ph:'f.eks. Medsendt Paracet 500 mg / Ibux 400 mg'},
+    {k:'annet', t:'area', label:'Annet', ph:'f.eks. 17 stort bentap db. Smerter ved depurasjon tross anestesi.'},
+    {k:'post', t:'check', label:'Postoperativ informasjon gitt', def:true},
+    {sec:'Anestesi og tillegg'},
+    ...ANEST,
+    {k:'regen', t:'check', label:'Regenerativt materiale / bentransplantasjon (takst 503 – kun spesialist)'},
+    {k:'regend', t:'text', label:'Materiale', ph:'f.eks. Emdogain 36 d', show:v=>v.regen},
+    ...TIME(),
+  ],
+  build(v) {
+    const w = [], min = +v.min || 0, n = n501(min), e = [];
+    if (v.anest) e.push({t:'6', text: 'Lokal/regional anestesi' + (t(v.anestd) ? '\n' + t(v.anestd) : '')});
+    e.push({t:'501', text: join(['Behandling av marginal periodontitt', 'Se kirurgi (502)' + (t(v.reg) ? ' – ' + t(v.reg) : ''), min && `Aktiv behandlingstid: ${min} min`])});
+    e.push(...repeats(n, min));
+    e.push({t:'502', text: join([
+      'Tillegg for kirurgisk inngrep ved behandling av periodontitt',
+      L('Tenner', v.reg), L('Snitt', v.snitt), L('Vask/irrigasjon', v.vask), L('Sårtoilette', v.sar),
+      L('Suturer', v.sut), L('Medikamenter', v.med), L('Annet', v.annet),
+      v.post && 'Postoperativ informasjon gitt.',
+    ])});
+    if (v.regen) {
+      e.push({t:'503', text: join(['Oppbygging med vevsregenererende materiale/bentransplantasjon ved bentap pga. periodontitt', L('Tenner', v.reg), L('Materiale', v.regend)])});
+      w.push(['info', '503 kan bare brukes av spesialister i periodonti, oral kirurgi og oral medisin og maxillofacial kirurgi.']);
+    }
+    chk501(v, n, w);
+    if (!t(v.reg)) w.push(['err', 'Angi hvilke tenner inngrepet gjelder.']);
+    if (!t(v.snitt)) w.push(['warn', 'Snitt er ikke beskrevet.']);
+    return {entries:e, w, next:'Sett opp postoperativ kontroll om 1–3 mnd (501 eller 5).'};
+  },
+},
+{
+  id:'po', phase:'Fase 2', tab:'Postop', title:'Postoperativ kontroll (1–3 mnd)', takst:'Takst 501 eller 5',
+  intro:'Kontroll med innfarging, instruksjon og ev. depurasjon etter kirurgi.',
+  helfo:[
+    'Bruk 501 når det depureres subgingivalt og aktiv behandlingstid er minst 30 min – ellers takst 5.',
+    'Dokumenter plakk, instruksjon og ev. endret prognose.',
+  ],
+  fields:[
+    {sec:'Takst'},
+    {k:'takst', t:'radio', label:'Takst', opts:[['501','501'],['5','5']], def:'501'},
+    {sec:'Kontroll'},
+    {k:'mnd', t:'radio', label:'Tid etter operasjon', opts:[['1','1 mnd'],['2','2 mnd'],['3','3 mnd']], def:'1'},
+    {k:'innf', t:'check', label:'Innfarging', def:true},
+    ...TOB,
+    {k:'plakk', t:'text', label:'Plakk', ph:'f.eks. lite plakk, noe approksimalt 17'},
+    {k:'instr', t:'text', label:'Instruert', ph:'f.eks. myk tannbørste operert område, interdentalbørste'},
+    {k:'dep', t:'text', label:'Depurert', ph:'f.eks. supra- og subgingivalt 1. kv.'},
+    {k:'puss', t:'check', label:'Puss m/pasta', def:true},
+    {k:'prog', t:'text', label:'Evt. endret prognose', ph:'f.eks. god tilheling, bedret prognose 16'},
+    ...TIME(v => v.takst === '501'),
+  ],
+  build(v) {
+    const w = [], is501 = v.takst === '501', min = +v.min || 0, n = is501 ? n501(min) : 0;
+    const text = join([
+      `${v.mnd} mnd postop. Kontroll.` + (v.innf ? ' Innfarging.' : ''),
+      tobLine(v), L('Plakk', v.plakk), L('Instruert', v.instr), L('Depurert', v.dep),
+      v.puss && 'Puss m/pasta.', L('Evt. endret prognose', v.prog),
+      is501 && min && `Aktiv behandlingstid: ${min} min`,
+    ]);
+    const e = [{t:v.takst, text}];
+    if (is501) { e.push(...repeats(n, min)); chk501(v, n, w);
+      if (!t(v.dep)) w.push(['err', '501 forutsetter subgingival depurasjon – fyll inn «Depurert», eller bruk takst 5.']); }
+    if (!t(v.instr)) w.push(['warn', 'Instruksjon i egenomsorg er ikke dokumentert.']);
+    return {entries:e, w, next:'Videre i vedlikeholdsfasen (fase 3) med individuelt intervall.'};
+  },
+},
+{
+  id:'ve', phase:'Fase 3', tab:'Vedlikehold', title:'Vedlikeholdsbehandling', takst:'Takst 501',
+  intro:'Støttebehandling med periodontale mål, instruksjon og subgingival depurasjon der det trengs.',
+  helfo:[
+    '501 forutsetter fortsatt systematisk behandling med subgingival depurasjon – ikke rutinemessig tannrens.',
+    'Minst 30 min aktiv behandlingstid. Maks 14 × 501 per kalenderår.',
+    'Dokumenter periodontale mål, plakk, instruksjon og ev. endret prognose.',
+  ],
+  fields:[
+    {sec:'Vedlikehold'},
+    {k:'mnd', t:'text', label:'Måneder postop / etter aktiv behandling', ph:'f.eks. 6'},
+    {k:'maal', t:'check', label:'Ført/kontrollert periodontale mål', def:true},
+    {k:'status', t:'select', label:'Sykdomsstatus', opts:['','Stabil','I remisjon','Ustabil']},
+    ...TOB,
+    {k:'plakk', t:'text', label:'Plakk', ph:'f.eks. plakk approksimalt molarer'},
+    {k:'instr', t:'text', label:'Instruert', ph:'f.eks. repetert interdentalbørster, ny str. 46–47'},
+    {k:'dep', t:'text', label:'Depurert', ph:'f.eks. subgingivalt lommer ≥ 5 mm m/BoP: 16, 26, 36'},
+    {k:'puss', t:'check', label:'Puss m/pasta', def:true},
+    {k:'prog', t:'text', label:'Evt. endret prognose', ph:'f.eks. uendret / dårligere prognose 27'},
+    {k:'ny', t:'radio', label:'Ny kontroll', opts:[['3 mnd','3 mnd'],['4 mnd','4 mnd'],['6 mnd','6 mnd'],['12 mnd','12 mnd']], def:'4 mnd'},
+    ...TIME(),
+  ],
+  build(v) {
+    const w = [], min = +v.min || 0, n = n501(min);
+    const text = join([
+      (t(v.mnd) ? `${t(v.mnd)} mnd postop. ` : '') + 'Vedlikeholdsbehandling.',
+      v.maal && 'Ført/kontrollert periodontale mål.',
+      L('Sykdomsstatus', v.status),
+      tobLine(v), L('Plakk', v.plakk), L('Instruert', v.instr), L('Depurert', v.dep),
+      v.puss && 'Puss m/pasta.', L('Evt. endret prognose', v.prog),
+      min && `Aktiv behandlingstid: ${min} min`,
+      L('Ny kontroll', v.ny),
+    ]);
+    chk501(v, n, w);
+    if (!t(v.dep)) w.push(['err', '501 forutsetter subgingival depurasjon – rutinemessig tannrens gir ikke stønad.']);
+    if (!v.maal) w.push(['warn', 'Periodontale mål er ikke ført/kontrollert.']);
+    if (!t(v.instr)) w.push(['warn', 'Opplæring i egenomsorg er ikke dokumentert.']);
+    return {entries:[{t:'501', text}, ...repeats(n, min)], w, next:`Ny vedlikeholdstime om ${v.ny || '3–6 mnd'} (501).`};
+  },
+},
+{
+  id:'rb', phase:'6b', tab:'Rehabilitering', title:'Rehabilitering ved tanntap pga. grav marginal periodontitt', takst:'Plan før takst 509–517',
+  intro:'Planene må være journalført før rehabiliteringen starter. Teksten under er planen du limer inn.',
+  helfo:[
+    'Årsaken til tanntapet (grav marginal periodontitt) må dokumenteres, og journalen skal si hvorfor tannen trekkes og ikke behandles.',
+    'Behandlingsplan og oppfølgingsplan, individuelt tilpasset, før start. Har en annen tannlege ansvar for oppfølgingen, må denne lage oppfølgingsplanen.',
+    'Munnhulen må være sanert for oralpatologiske tilstander.',
+    'Hovedregel: ikke stønad bakenfor premolar / 5. tann – unntak begrunnes og dokumenteres.',
+    'Én rehabilitering per tapt tann. 509–511: dokumenter midlertidig eller permanent protese.',
+  ],
+  fields:[
+    {sec:'Tanntap'},
+    {k:'tenner', t:'text', label:'Tapt(e) / planlagt trukket tann/tenner', ph:'f.eks. 21, 22'},
+    {k:'arsak', t:'check', label:'Tanntapet skyldes grav marginal periodontitt'},
+    {k:'dok', t:'text', label:'Dokumentasjon av årsak', ph:'f.eks. røntgen: bentap til apex, mob. grad 3, PPD 10 mm'},
+    {k:'hvorfor', t:'area', label:'Hvorfor tannen trekkes og ikke behandles for marginal periodontitt', ph:'f.eks. Håpløs prognose: bentap > 2/3 av rotlengden, mobilitet 3, gjennomgående furkasjon'},
+    {k:'unntak', t:'area', label:'Begrunnelse for unntak (tann bakenfor premolar)', ph:'f.eks. nødvendig for tyggefunksjon / støtte for protese', show:v=>molars(v.tenner).length > 0},
+    {sec:'Forutsetninger'},
+    {k:'sanert', t:'check', label:'Munnhulen er sanert for oralpatologiske tilstander'},
+    {k:'tidl', t:'check', label:'Det er ikke tidligere gitt stønad til rehabilitering av samme tann(er)'},
+    {k:'tidld', t:'text', label:'Ev. unntak (protetikk må gjøres om pga. nye ekstraksjoner)', ph:'f.eks. delprotese må utvides etter ekstraksjon 24', show:v=>!v.tidl},
+    {sec:'Behandlingsplan'},
+    {k:'type', t:'select', label:'Planlagt erstatning', opts:['','Implantat','Fast bro','Avtakbar delprotese','Helprotese']},
+    {k:'midl', t:'radio', label:'Protesen er', opts:[['Midlertidig','Midlertidig'],['Permanent','Permanent']], show:v=>/protese/i.test(v.type || '')},
+    {k:'plan', t:'area', label:'Behandlingsplan', ph:'f.eks. 1) Ekstraksjon 21. 2) Midlertidig delprotese. 3) Implantat 21 etter 3 mnd tilheling.'},
+    {sec:'Oppfølging'},
+    {k:'oppf', t:'area', label:'Plan for oppfølging', ph:'f.eks. Kontroll 1 og 3 mnd etter innsetting, deretter perio-vedlikehold hver 4. mnd inkl. kontroll av implantat.'},
+    {k:'ansv', t:'radio', label:'Ansvarlig for oppfølging', opts:[['meg','Meg'],['annen','Annen tannlege']], def:'meg'},
+    {k:'ansvd', t:'text', label:'Navn tannlege / klinikk', show:v=>v.ansv === 'annen'},
+    {k:'samt', t:'check', label:'Pasienten er informert og samtykker'},
+  ],
+  build(v) {
+    const w = [], mol = molars(v.tenner), prot = /protese/i.test(v.type || '');
+    const text = join([
+      'Rehabiliteringsplan – stønadspunkt 6b (tanntap som følge av grav marginal periodontitt)',
+      L('Tenner', v.tenner),
+      v.arsak && 'Årsak til tanntap: grav marginal periodontitt.' + (t(v.dok) ? ' ' + t(v.dok) : ''),
+      !v.arsak && L('Dokumentasjon', v.dok),
+      L('Begrunnelse for ekstraksjon fremfor behandling av marginal periodontitt', v.hvorfor),
+      mol.length && L(`Unntak bakenfor premolar (${mol.join(', ')}) – begrunnelse`, v.unntak),
+      v.sanert && 'Munnhulen er sanert for oralpatologiske tilstander.',
+      v.tidl ? 'Det er ikke tidligere gitt stønad til rehabilitering av samme tann(er).' : L('Tidligere stønad – unntak', v.tidld),
+      t(v.type) && 'Planlagt erstatning: ' + t(v.type) + (prot && v.midl ? ` – ${v.midl.toLowerCase()}` : ''),
+      L('Behandlingsplan', v.plan),
+      L('Oppfølgingsplan', v.oppf),
+      'Ansvarlig for oppfølging: ' + (v.ansv === 'annen' ? (t(v.ansvd) || 'annen tannlege') : 'behandlende tannlege'),
+      v.samt && 'Pasienten er informert og samtykker.',
+    ]);
+    if (!t(v.tenner)) w.push(['err', 'Angi hvilke tenner rehabiliteringen gjelder.']);
+    if (!v.arsak) w.push(['err', 'Tanntapet må skyldes grav marginal periodontitt – kryss av og dokumenter.']);
+    else if (!t(v.dok)) w.push(['warn', 'Dokumenter årsaken til tanntapet (røntgen, PPD, mobilitet …).']);
+    if (!t(v.hvorfor)) w.push(['err', 'Beskriv hvorfor tannen trekkes og ikke behandles for marginal periodontitt.']);
+    if (mol.length && !t(v.unntak)) w.push(['err', `${mol.join(', ')} ligger bakenfor premolar – unntak må begrunnes.`]);
+    if (!v.sanert) w.push(['err', 'Munnhulen må være sanert for oralpatologiske tilstander før start.']);
+    if (!v.tidl && !t(v.tidld)) w.push(['warn', 'Det gis stønad til én rehabilitering per tann – avklar tidligere stønad.']);
+    if (!t(v.plan)) w.push(['err', 'Behandlingsplan mangler.']);
+    if (!t(v.oppf) && v.ansv !== 'annen') w.push(['err', 'Plan for oppfølging mangler.']);
+    if (v.ansv === 'annen') w.push(['info', 'Når en annen tannlege har ansvar for oppfølgingen, må den tannlegen utarbeide oppfølgingsplanen.']);
+    if (prot && !v.midl) w.push(['err', 'Dokumenter om protesen er midlertidig eller permanent (509–511).']);
+    if (prot && v.midl === 'Midlertidig') w.push(['info', 'Beholdes den midlertidige protesen (509) permanent, gis det ikke ny stønad etter 510/511.']);
+    if (v.type === 'Implantat') w.push(['info', 'Implantat: 514. Takst 401/402 kan brukes sammen med 514. Ved regenerasjon: 503/504 sammen med 514. Ikke 421–423 under 6b.']);
+    if (!v.samt) w.push(['warn', 'Samtykke er ikke dokumentert.']);
+    return {entries:[{t:'6b', text}], w,
+      next:'Takst 509–517 dekker alle kliniske prosedyrer (inkl. anestesi, røntgen og tannteknikk). Undersøkelse og etterkontroll: takst 1–5.'};
+  },
+},
+];
+
+// ---------- tilstand ----------
+const S = {};
+function defaults(m) {
+  const v = {};
+  for (const f of m.fields) if (f.k) v[f.k] = f.t === 'rows' ? (f.def || []).map(r => ({...r})) : f.t === 'multi' ? [] : (f.def ?? (f.t === 'check' ? false : ''));
+  return v;
+}
+M.forEach(m => S[m.id] = defaults(m));
+let cur = M[0];
+let last = {entries:[], w:[]};
+
+// ---------- tegning ----------
+function renderTabs() {
+  $('#tabs').innerHTML = M.map(m => `<button class="tab" role="tab" type="button" data-id="${m.id}" aria-selected="${m === cur}"><small>${m.phase}</small>${m.tab}</button>`).join('');
+}
+function renderIntro() {
+  $('#intro').innerHTML = `
+    <div class="card"><span class="badge">${esc(cur.takst)}</span><h2>${esc(cur.title)}</h2><p>${esc(cur.intro)}</p><div class="next" id="next"></div></div>
+    <div class="card helfo"><h3>HELFO-krav for denne timen</h3><ul>${cur.helfo.map(h => `<li>${esc(h)}</li>`).join('')}</ul></div>`;
+}
+function fieldHTML(f, v) {
+  if (f.show && !f.show(v)) return '';
+  if (f.sec) return `<h3 class="sec">${esc(f.sec)}</h3>`;
+  const val = v[f.k], lab = `<span>${esc(f.label)}${f.hint ? ' <span class="hint" id="hint_' + f.k + '"></span>' : ''}</span>`;
+  switch (f.t) {
+    case 'check': return `<label class="chk"><input type="checkbox" data-k="${f.k}"${val ? ' checked' : ''}><span>${esc(f.label)}</span></label>`;
+    case 'text': return `<label class="fld">${lab}<input type="text" data-k="${f.k}" value="${esc(val)}" placeholder="${esc(f.ph || '')}"></label>`;
+    case 'number': return `<label class="fld">${lab}<input type="number" inputmode="numeric" min="0" step="5" data-k="${f.k}" value="${esc(val)}" placeholder="${esc(f.ph || '')}"></label>`;
+    case 'area': return `<label class="fld">${lab}<textarea data-k="${f.k}" rows="2" placeholder="${esc(f.ph || '')}">${esc(val)}</textarea></label>`;
+    case 'select': return `<label class="fld">${lab}<select data-k="${f.k}">${f.opts.map(o => `<option value="${esc(o)}"${o === val ? ' selected' : ''}>${o ? esc(o) : '–'}</option>`).join('')}</select></label>`;
+    case 'radio': return `<div class="fld"><span>${esc(f.label)}</span><div class="seg" role="radiogroup" aria-label="${esc(f.label)}">${f.opts.map(([k, l]) =>
+      `<label><input type="radio" name="${f.k}" data-k="${f.k}" value="${esc(k)}"${k === val ? ' checked' : ''}><span>${esc(l)}</span></label>`).join('')}</div></div>`;
+    case 'multi': return `<div class="fld"><span>${esc(f.label)}</span><div class="seg">${f.opts.map(o =>
+      `<label><input type="checkbox" data-k="${f.k}" data-multi value="${esc(o)}"${val.includes(o) ? ' checked' : ''}><span>${esc(o)}</span></label>`).join('')}</div></div>`;
+    case 'rows': return `<div class="rows">${val.map((r, i) => `<div class="row"><span class="num">${i + 1}</span>${f.cols.map(([c, p]) =>
+      `<input type="text" data-k="${f.k}" data-i="${i}" data-c="${c}" value="${esc(r[c])}" placeholder="${esc(p)}" aria-label="${esc(p)} ${i + 1}">`).join('')}<button type="button" class="btn icon" data-del="${f.k}" data-i="${i}" aria-label="Fjern rad ${i + 1}">✕</button></div>`).join('')}
+      <button type="button" class="btn ghost" data-add="${f.k}">+ Legg til rad</button></div>`;
+  }
+  return '';
+}
+function renderForm() {
+  const v = S[cur.id];
+  let html = '', i = 0;
+  const fs = cur.fields;
+  while (i < fs.length) {
+    const f = fs[i];
+    if (f.half === 1 && fs[i + 1] && fs[i + 1].half === 2) { html += `<div class="two">${fieldHTML(f, v)}${fieldHTML(fs[i + 1], v)}</div>`; i += 2; continue; }
+    html += fieldHTML(f, v); i++;
+  }
+  $('#form').innerHTML = html + '<div class="formfoot"><button type="button" class="btn ghost" id="reset">Nullstill denne timen</button></div>';
+}
+function takstSummary(entries) {
+  const order = [], cnt = {};
+  for (const e of entries) { if (!(e.t in cnt)) { order.push(e.t); cnt[e.t] = 0; } cnt[e.t]++; }
+  return order.map(k => cnt[k] > 1 ? `${k} × ${cnt[k]}` : k).join(' + ');
+}
+function renderOut() {
+  const v = S[cur.id];
+  last = cur.build(v);
+  last.entries = last.entries.filter(e => t(e.text));
+  const tk = cur.id === 'rb' ? 'Plan 6b' : 'Takster: ' + takstSummary(last.entries);
+  const errs = last.w.filter(x => x[0] === 'err' || x[0] === 'warn').length;
+  const msgs = last.w.length ? last.w : [];
+  const okMsg = errs ? '' : '<li class="ok">✓ Alle HELFO-kontrollpunkter er dekket.</li>';
+  $('#out').innerHTML = `
+    <h2>Journaltekst</h2>
+    <div class="sum"><span class="tk">${esc(tk)}</span><button type="button" class="btn primary" data-copy="all">Kopier alt</button></div>
+    <ul class="msgs">${msgs.map(([l, m]) => `<li class="${l}">${l === 'err' ? '✕ ' : l === 'warn' ? '! ' : ''}${esc(m)}</li>`).join('')}${okMsg}</ul>
+    ${last.entries.map((e, i) => `<div class="entry"><header><b>${cur.id === 'rb' ? '6b – plan' : 'Takst ' + esc(e.t)}</b><button type="button" class="btn" data-copy="${i}">Kopier</button></header><pre>${esc(e.text)}</pre></div>`).join('')}`;
+  $('#next').innerHTML = `<b>Neste:</b> ${esc(last.next || '')}`;
+  $('#barTk').textContent = tk + (errs ? ` · ${errs} ⚠` : ' · ✓');
+  const h = document.getElementById('hint_min');
+  if (h) { const n = n501(+v.min || 0); h.textContent = n ? `→ ${n} × 501` : '→ under 30 min, ingen 501'; }
+}
+function select(id) {
+  cur = M.find(m => m.id === id) || M[0];
+  renderTabs(); renderIntro(); renderForm(); renderOut();
+}
+
+// ---------- hendelser ----------
+$('#tabs').addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if (!b) return;
+  select(b.dataset.id);
+  if (location.hash !== '#' + b.dataset.id) history.replaceState(null, '', '#' + b.dataset.id);
+  window.scrollTo({top: 0});
+});
+function readInput(el) {
+  const v = S[cur.id], k = el.dataset.k;
+  if (el.dataset.i != null && el.dataset.c) v[k][+el.dataset.i][el.dataset.c] = el.value;
+  else if (el.dataset.multi != null) { const s = new Set(v[k]); el.checked ? s.add(el.value) : s.delete(el.value); const f = cur.fields.find(x => x.k === k); v[k] = f.opts.filter(o => s.has(o)); }
+  else if (el.type === 'checkbox') v[k] = el.checked;
+  else v[k] = el.value;
+}
+const form = $('#form');
+form.addEventListener('input', e => { const el = e.target; if (!el.dataset.k) return; readInput(el); if (el.type === 'text' || el.tagName === 'TEXTAREA' || el.type === 'number') renderOut(); });
+form.addEventListener('change', e => {
+  const el = e.target; if (!el.dataset.k) return;
+  readInput(el);
+  if (el.type === 'checkbox' || el.type === 'radio' || el.tagName === 'SELECT') {
+    const y = window.scrollY; renderForm(); renderOut(); window.scrollTo({top: y});
+    const back = form.querySelector(`[data-k="${el.dataset.k}"]${el.value && (el.type === 'radio' || el.dataset.multi != null) ? `[value="${CSS.escape(el.value)}"]` : ''}`);
+    if (back) back.focus({preventScroll: true});
+  }
+});
+form.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const v = S[cur.id];
+  if (b.dataset.add) { v[b.dataset.add].push(Object.fromEntries(cur.fields.find(f => f.k === b.dataset.add).cols.map(([c]) => [c, '']))); renderForm(); renderOut();
+    const ins = form.querySelectorAll(`[data-k="${b.dataset.add}"][data-i]`); ins[ins.length - (cur.fields.find(f => f.k === b.dataset.add).cols.length)]?.focus(); }
+  else if (b.dataset.del) { v[b.dataset.del].splice(+b.dataset.i, 1); renderForm(); renderOut(); }
+  else if (b.id === 'reset') { if (confirm('Nullstille alle felt for denne timen?')) { S[cur.id] = defaults(cur); renderForm(); renderOut(); } }
+});
+
+async function copyText(text, btn) {
+  try { await navigator.clipboard.writeText(text); }
+  catch { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  if (btn) { const o = btn.textContent; btn.textContent = 'Kopiert ✓'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = o; btn.classList.remove('copied'); }, 1400); }
+}
+const allText = () => last.entries.length === 1 ? last.entries[0].text
+  : last.entries.map(e => `Takst ${e.t}\n${e.text}`).join('\n\n');
+$('#out').addEventListener('click', e => {
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  copyText(b.dataset.copy === 'all' ? allText() : last.entries[+b.dataset.copy].text, b);
+});
+$('#barCopy').addEventListener('click', e => copyText(allText(), e.currentTarget));
+$('#barJump').addEventListener('click', () => $('#out').scrollIntoView({behavior: 'smooth', block: 'start'}));
+window.addEventListener('hashchange', () => select(location.hash.slice(1)));
+
+select(location.hash.slice(1));
+</script>
+</body>
+</html>
